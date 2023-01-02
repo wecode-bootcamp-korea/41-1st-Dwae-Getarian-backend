@@ -1,8 +1,8 @@
-function globalErrorHandler (error, req, res, next) {
+function globalErrorHandler (err, req, res, next) {
     
-    const statusCode = 500 || error.statusCode;
+    const statusCode = 500 || err.statusCode;
     
-    res.status(statusCode).json({ message: error.message });
+    res.status(statusCode).json({ message: err.message });
 }
 
 

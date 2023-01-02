@@ -18,14 +18,17 @@ const PORT = process.env.PORT;
 
 const start = async () => {
     try {
-        appDataSource.initialize()
+        await appDataSource.initialize()
         .then(() => {
             console.log("Your Database is on Fire!!!");
-            app.listen(PORT, () => {
-                console.log(`Your server listening on ${PORT}`);
-            });
         });
+
+        app.listen(PORT, () => {
+            console.log(`Your server listening on ${PORT}`);    
+        });
+        
     } catch(err) {
+        appDataSource.destroy();
         console.err("failed to connect!!!");
     }
 }

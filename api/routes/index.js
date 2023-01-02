@@ -3,6 +3,7 @@ const express = require("express");
 const userRoutes = require("./userRoutes");
 const orderRoutes = require("./orderRoutes");
 // const cartRoutes = require();
+const productRoutes = require("./productRoutes");
 
 const routes = express.Router();
 

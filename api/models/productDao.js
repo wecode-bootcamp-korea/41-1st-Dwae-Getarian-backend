@@ -1,5 +1,4 @@
 const appDataSource = require("../database/database");
-const { getAllProducts } = require("../services/productService");
 
 class Product {
     async getAllProducts() {

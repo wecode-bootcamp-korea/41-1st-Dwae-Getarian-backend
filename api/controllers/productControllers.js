@@ -7,7 +7,7 @@ async function getAllProducts(req, res) {
 }
 
 async function getCategorisedProducts(req, res) {
-    const categoriesId = req.params;
+    const { categoriesId } = req.query;
 
     const categorisedProducts = await getCategorisedProducts(categoriesId);
 

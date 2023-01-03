@@ -8,6 +8,8 @@ async function createOrdersRequest(userId, products) {
     const orderTable = await orderDatabaseHandler
                             .createOrderTable(userId);
 
+
+    // 여기서 어떻게 order Id 를 뽑을지 구상
     console.log("from orderTable ORDER SERVICE", orderTable);
 
     let totalCost = 0;
@@ -36,8 +38,6 @@ async function createOrdersRequest(userId, products) {
 
     return orderRequestData;
 }
-
-
 
 
 module.exports = {

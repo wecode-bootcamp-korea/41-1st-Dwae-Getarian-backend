@@ -1,13 +1,26 @@
 const appDataSource = require("../database/database");
+const { getAllProducts } = require("../services/productService");
 
 class Product {
-    async getAllProduct() {
-        const allProduct = await appDataSource.query(
+    async getAllProducts() {
+        const allProducts = await appDataSource.query(
         `
-        SELECT * FROM products
+        SELECT * FROM products;
         `);
 
-        return allProduct;
+        return allProducts;
+    }
+
+    async getCategorisedProducts(categoriesId) {
+        const categorisedProducts = await appDataSource.query(
+        `
+        SELECT * FROM products p 
+        INNER JOIN categories c 
+        ON p.categories_id = c.id
+        WHERE c.id = ?
+        `, [ categoriesId ]);
+
+        return categorisedProducts;
     }
 }
 

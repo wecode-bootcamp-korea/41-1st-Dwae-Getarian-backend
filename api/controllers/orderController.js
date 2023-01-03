@@ -8,9 +8,7 @@ async function createOrdersRequest(req, res) {
 
     const orderRequest = await createOrdersRequest(userId, products);
 
-
     res.status(200).json({ message: "orders completed CONTROLLER", orderRequest});
-
 }
 
 

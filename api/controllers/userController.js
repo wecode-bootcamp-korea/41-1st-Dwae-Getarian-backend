@@ -1,4 +1,4 @@
-const userService = require("../services/userService");
+const { signUp, logIn } = require("../services/userService");
 
 async function signUp(req, res) {
     const user = req.body;
@@ -7,7 +7,7 @@ async function signUp(req, res) {
         return json.status(401).json({ message: "KEY_ERROR INPUTS REQUIRED (USER CONTROLLER)" });
     }
 
-    await userService.signUp(user);
+    await signUp(user);
 
     return res.status(201).json({ message: "userCreated!!!" });
 }   
@@ -19,7 +19,7 @@ async function logIn(req, res) {
         return json.status(401).json({ message: "KEY_ERROR INPUTS REQUIRED (USER CONTROLLER)" })
     }
 
-    const jwtToken = await userService.logIn(enteredEmail, enteredPassword);
+    const jwtToken = await logIn(enteredEmail, enteredPassword);
 
     res.status(201).json({ jwtToken: jwtToken });
 }

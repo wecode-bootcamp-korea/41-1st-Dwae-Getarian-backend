@@ -1,6 +1,6 @@
 const { signUp, logIn } = require("../services/userService");
 
-async function signUp(req, res) {
+async function userSignUp(req, res) {
     const user = req.body;
 
     if (!user.name || !user.email || !user.password) { 
@@ -12,7 +12,7 @@ async function signUp(req, res) {
     return res.status(201).json({ message: "userCreated!!!" });
 }   
 
-async function logIn(req, res) {
+async function userLogIn(req, res) {
     const { enteredEmail, enteredPassword } = req.body;
 
     if (!enteredEmail || !enteredPassword) {
@@ -25,6 +25,6 @@ async function logIn(req, res) {
 }
 
 module.exports = {
-    signUp: signUp,
-    logIn: logIn
+    userSignUp,
+    userLogIn
 }

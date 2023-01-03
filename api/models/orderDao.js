@@ -1,36 +1,33 @@
-const appDataSource = require("../database/database");
+const { appDataSource } = require("../database/database");
 
-class Order {
-    constructor() {
-        console.log("HIIIIII"); 
-    }
 
-    async createOrderTable(userId) {
-        const orderTable = await appDataSource.query(
-            `
-            INSERT INTO orders
-                (user_id) 
-            VALUES 
-                (?)
-        `, [ userId ]);
-        console.log("from order DAO order table result", orderTable);
-        return orderTable;
-    }
-
-    async createOrdersRequest(ordersId, productId, quantity) {
-        const result = await appDataSource.query(
-            `
-            INSERT INTO order_product
-                (order_id, product_id, quantity)
-            VALUES 
-                (?, ?, ?)
-        `, [ ordersId, productId, quantity ]);
-
-        return result;
-    }
-
-    
+async function createOrderTable(userId) {
+    const orderTable = await appDataSource.query(
+        `
+        INSERT INTO orders
+            (user_id) 
+        VALUES (?)
+    `, [ userId ]);
+    return orderTable;
 }
 
+async function createOrdersRequest(orderId, products) {
+    const query = `
+        INSERT INTO order_product
+            (orders_id, product_id, quantity)
+        VALUES ?;
+        `
 
-module.exports = Order;
+    const values = products.map((product) => {
+        return [ orderId, product.id, product.quantity ];
+    });
+    
+    const result = await appDataSource.query(query, [values]);
+
+    return result;
+}
+
+module.exports = {
+    createOrderTable,
+    createOrdersRequest
+}

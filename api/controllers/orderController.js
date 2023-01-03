@@ -1,9 +1,10 @@
 const { createOrdersRequest } = require("../services/orderService");
 
-async function createOrdersRequest(req, res) {
-    const { products } = req.body;
+async function ordersRequest(req, res) {
+    const userId = req.id; 
+    const products = req.body;
 
-    if (!products || !quantity || !userId) 
+    if (!products || !userId) 
     return res.status(401).json({ message: "INVALID INPUT (CONTROLLER)" });
 
     const orderRequest = await createOrdersRequest(userId, products);
@@ -12,7 +13,6 @@ async function createOrdersRequest(req, res) {
 }
 
 
-
 module.exports = {
-    createOrdersRequest: createOrdersRequest
+    ordersRequest
 }

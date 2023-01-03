@@ -1,30 +1,27 @@
-const orderDatabase = require("../models/orderDao");
-const userDatabase = require("../models/userDao");
+
+
+const orderModel = require("../models/orderDao");
+const userModel = require("../models/userDao");
 
 async function createOrdersRequest(userId, products) {
-    const orderRequestData = [];
-    const orderDatabaseHandler = new orderDatabase();
 
-    const orderTable = await orderDatabaseHandler
-                            .createOrderTable(userId);
-
+    const orderTable = await orderModel.createOrderTable(userId);
 
     // 여기서 어떻게 order Id 를 뽑을지 구상
-    console.log("from orderTable ORDER SERVICE", orderTable);
+    const orderId = orderTable.insertId;
 
     let totalCost = 0;
-    let orderRequest;
 
     for (const product of products) {
-        orderRequest = await orderDatabaseHandler
-        .createOrderTable(ordersId, product.id, product.quantity);
-
         totalCost += product.quantity * product.price; 
-        
-        orderRequestData.push(orderRequest);
     }
 
-    const userPoint = await new userDatabase().callUserData("point", userId);
+    console.log("totalCost", totalCost);
+
+
+    const userPointData = await userModel.callUserData("point", userId);
+    const userPoint = userPointData[0].point;
+
     const updatedUserPoint = userPoint - totalCost;
 
     if (updatedUserPoint < 0) {
@@ -34,12 +31,14 @@ async function createOrdersRequest(userId, products) {
         throw err;
     }
 
-    await new userDatabase().updateUserData(updatedUserPoint, userId);
+    await userModel.updateUserData(updatedUserPoint, userId);
+
+    const orderRequestData = await orderModel.createOrdersRequest(orderId, products);
 
     return orderRequestData;
 }
 
 
 module.exports = {
-    createOrdersRequest: createOrdersRequest
+    createOrdersRequest
 }

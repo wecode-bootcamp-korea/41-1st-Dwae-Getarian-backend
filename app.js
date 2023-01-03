@@ -5,12 +5,16 @@ const cors = require("cors");
 const morgan = require("morgan");
 
 const { appDataSource } = require("./api/database/database");
+const indexRoutes = require("./api/routes/index");
 const errorHandlingMiddlewares = require("./api/middlewares/errorHandler");
 
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 app.use(morgan("dev"));
+
+app.use(indexRoutes);
 
 app.use(errorHandlingMiddlewares.globalErrorHandler);
 

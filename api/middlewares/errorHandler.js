@@ -7,5 +7,5 @@ function globalErrorHandler (err, req, res, next) {
 
 
 module.exports = {
-    globalErrorHandler: globalErrorHandler
+    globalErrorHandler
 }

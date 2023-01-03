@@ -1,23 +1,26 @@
-const Product = require("../models/productDao");
+const productModel = require("../models/productDao");
 
 
 async function getAllProducts() {
-    const productModelHandler = new Product();
-
-    const allProducts = await productModelHandler.getAllProducts();
+    const allProducts = await productModel.getAllProducts();
 
     return allProducts;
 }
 
-async function getCategorisedProducts(categorisedId) {
-    const productModelHandler = new Product();
+async function getSpecificProduct(productId) {
+    const product = await productModel.getSpecificProduct(productId);
 
-    const categorisedProducts = await productModelHandler.getCategorisedProducts();
+    return product;
+}
+
+async function getCategorisedProducts(categorisedId) {
+    const categorisedProducts = await productModel.getCategorisedProducts();
 
     return categorisedProducts;
 }
 
 module.exports = {
-    getAllProducts: getAllProducts,
-    getCategorisedProducts: getCategorisedProducts
+    getAllProducts,
+    getCategorisedProducts,
+    getSpecificProduct
 }

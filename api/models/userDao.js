@@ -24,8 +24,7 @@ async function signUp(user, hashedPassword) {
 async function logIn(userEmail) {
     const result = await appDataSource.query(
     `
-    SELECT * 
-    FROM users
+    SELECT * FROM users
     WHERE email = ?;
     `, [userEmail]);
         

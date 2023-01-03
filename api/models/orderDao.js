@@ -9,12 +9,12 @@ async function createOrderTable(userId) {
                 (user_id) 
             VALUES (?)
         `, [ userId ]);
+
         return orderTable;
     } catch(err) {
         console.log("ORDER DAO1")
         throw err;
     } 
-
 }
 
 async function createOrdersRequest(orderId, products) {
@@ -32,6 +32,7 @@ async function createOrdersRequest(orderId, products) {
     const result = await appDataSource.query(query, [values]);
 
     return result;
+    
     } catch(err) {
         console.log("ORDER DAO 2")
         throw err;

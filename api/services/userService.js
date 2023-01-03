@@ -52,6 +52,6 @@ async function logIn(enteredEmail, enteredPassword) {
 
  
 module.exports = {
-    signUp: signUp,
-    logIn: logIn
+    signUp,
+    logIn
 }

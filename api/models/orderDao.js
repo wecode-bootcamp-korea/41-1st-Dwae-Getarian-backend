@@ -11,6 +11,7 @@ async function createOrderTable(userId) {
         `, [ userId ]);
 
         return orderTable;
+        
     } catch(err) {
         console.log("ORDER DAO1")
         throw err;
@@ -19,20 +20,19 @@ async function createOrderTable(userId) {
 
 async function createOrdersRequest(orderId, products) {
     try {
-    const query = `
+        const query = `
         INSERT INTO order_product
             (orders_id, product_id, quantity)
         VALUES ?;
         `
-
-    const values = products.map((product) => {
-        return [ orderId, product.id, product.quantity ];
-    });
+        const values = products.map((product) => {
+            return [ orderId, product.id, product.quantity ];
+        });
     
-    const result = await appDataSource.query(query, [values]);
+        const result = await appDataSource.query(query, [values]);
 
-    return result;
-    
+        return result;
+
     } catch(err) {
         console.log("ORDER DAO 2")
         throw err;

@@ -27,7 +27,8 @@ async function getSpecificProduct(req, res, next) {
 async function getCategorisedProducts(req, res, next) {
     try {
         const categoryId  = req.query.id;
-        const categorisedProducts = await productService.getCategorisedProducts(categoryId);
+        const displayOption = "ASC"
+        const categorisedProducts = await productService.getCategorisedProducts(categoryId, displayOption);
     
         if (!categorisedProducts.length) {
             const err = new Error ("No follwing products");

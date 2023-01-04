@@ -24,11 +24,17 @@ async function getSpecificProduct(req, res, next) {
     } 
 }
 
+
 async function getCategorisedProducts(req, res, next) {
     try {
+        let displayOption = "";
+        let displayColumn = "";
         const categoryId  = req.query.id;
-        const displayOption = "ASC"
-        const categorisedProducts = await productService.getCategorisedProducts(categoryId, displayOption);
+
+        displayColumn = req.query.display;
+        displayOption = req.query.option;
+
+        const categorisedProducts = await productService.getCategorisedProducts(categoryId, displayColumn, displayOption);
     
         if (!categorisedProducts.length) {
             const err = new Error ("No follwing products");

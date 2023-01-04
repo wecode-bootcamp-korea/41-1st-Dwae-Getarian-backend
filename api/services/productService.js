@@ -13,8 +13,8 @@ async function getSpecificProduct(productId) {
     return product;
 }
 
-async function getCategorisedProducts(categoryId, displayOption) {
-    const categorisedProducts = await productModel.getCategorisedProducts(categoryId, displayOption);
+async function getCategorisedProducts(categoryId, displayColumn, displayOption) {
+    const categorisedProducts = await productModel.getCategorisedProducts(categoryId, displayColumn, displayOption);
 
     return categorisedProducts;
 }

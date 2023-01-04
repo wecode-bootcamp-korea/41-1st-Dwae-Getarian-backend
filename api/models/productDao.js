@@ -27,31 +27,36 @@ async function getSpecificProduct(productId) {
 
 }
 
-async function getCategorisedProducts(categoryId, displayOption) {
+async function getCategorisedProducts(categoryId, displayColumn, displayOption) {
 	let values = "";
 	let conditions = "";
+	let secondQuery = "";
 
-	console.log(displayOption);
-	console.log(categoryId)
+	const firstQuery = `SELECT * FROM products p `;
 
-	const query = 
-	`
-		SELECT * FROM products p 
-			ORDER BY prices ${displayOption}
- 	`;
+	if (displayColumn || displayOption) {
+		secondQuery = `ORDER BY ${displayColumn} ${displayOption}`
+	}
 
 	if (categoryId) {
-		values = `INNER JOIN categories c ON p.category_id = c.id WHERE c.id = ?`
+		values = `INNER JOIN categories c ON p.category_id = c.id WHERE c.id = ? `
 		conditions = [ `${categoryId}` ];
 	}
 
-  console.log(query + values, conditions)
 	const categorisedProducts = await appDataSource.query(
-		query + values, conditions
+		firstQuery + values + secondQuery, conditions
 	);
 
 
     return categorisedProducts;
+}
+
+async function searchProduct() {
+	const searchedProducts = await appDataSource.query(
+		`
+			SELECT p.name, p.thumbnail_image FROM products p
+			WHERE  
+		`)
 }
 
 

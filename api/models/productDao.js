@@ -51,12 +51,14 @@ async function getCategorisedProducts(categoryId, displayColumn, displayOption) 
     return categorisedProducts;
 }
 
-async function searchProduct() {
+async function searchProducts(keyWord) {
 	const searchedProducts = await appDataSource.query(
 		`
-			SELECT p.name, p.thumbnail_image FROM products p
-			WHERE  
-		`)
+			SELECT name, thumbnail_image FROM products
+			WHERE name LIKE '${keyWord}%';
+		`);
+
+	return searchedProducts;
 }
 
 
@@ -64,5 +66,6 @@ async function searchProduct() {
 module.exports = {
     getAllProducts,
     getCategorisedProducts,
-    getSpecificProduct
+    getSpecificProduct,
+		searchProducts
 }

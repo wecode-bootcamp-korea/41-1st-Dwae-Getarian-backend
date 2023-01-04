@@ -47,11 +47,19 @@ async function getCategorisedProducts(req, res, next) {
     } catch(err) {
         next(err);
     }
+}
 
+async function searchedProducts(req, res) {
+    const { keyWord } = req.body
+
+    const searchedProducts = await productService.searchedProducts(keyWord);
+
+    return res.status(201).json(searchedProducts);
 }
 
 module.exports = {
     getAllProducts,
     getCategorisedProducts,
-    getSpecificProduct
+    getSpecificProduct,
+    searchedProducts
 } 

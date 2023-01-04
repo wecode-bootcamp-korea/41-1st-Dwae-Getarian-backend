@@ -19,8 +19,15 @@ async function getCategorisedProducts(categoryId, displayColumn, displayOption) 
     return categorisedProducts;
 }
 
+async function searchedProducts(keyWord) {
+    const searchedProducts = await productModel.searchProducts(keyWord);
+
+    return searchedProducts;
+}
+
 module.exports = {
     getAllProducts,
     getCategorisedProducts,
-    getSpecificProduct
+    getSpecificProduct,
+    searchedProducts
 }

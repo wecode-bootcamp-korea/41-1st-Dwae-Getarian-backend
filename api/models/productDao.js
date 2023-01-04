@@ -24,7 +24,6 @@ async function getSpecificProduct(productId) {
     } catch(err) {
         throw err;
     }
-
 }
 
 async function getCategorisedProducts(categoryId, displayColumn, displayOption) {
@@ -40,13 +39,12 @@ async function getCategorisedProducts(categoryId, displayColumn, displayOption) 
 
 	if (categoryId) {
 		values = `INNER JOIN categories c ON p.category_id = c.id WHERE c.id = ? `
-		conditions = [ `${categoryId}` ];
+		conditions = [ `${ categoryId }` ];
 	}
 
 	const categorisedProducts = await appDataSource.query(
 		firstQuery + values + secondQuery, conditions
 	);
-
 
     return categorisedProducts;
 }

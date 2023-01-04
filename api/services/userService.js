@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 
 const bcrypt = require("../util/bcrypt");
 const userDatabase = require("../models/userDao");
-const cartDatabase = require("../models/cartDao");
 
 
 async function signUp(user) {
@@ -29,7 +28,7 @@ async function signUp(user) {
     const hashedPassword = await passwordHandler.encode();
 
     const result = await userDatabase.signUp(user, hashedPassword);
-		await cartDatabase.createCart(result.insertId);
+
 
     return result;
 }
@@ -45,13 +44,7 @@ async function logIn(enteredEmail, enteredPassword) {
         throw err;
     }
 
-		const cartData = await cartDatabase.getCart(userData.id);
-
-    const jwtToken = jwt.sign(
-        {
-					userId: userData.id,
-        	cartId: cartData.id
-     		}, process.env.SECRET_KEY);
+    const jwtToken = jwt.sign({userId: userData.id}, process.env.SECRET_KEY);
 
     return jwtToken;
 }

@@ -19,8 +19,15 @@ async function getCategorisedProducts(categoryId) {
     return categorisedProducts;
 }
 
+async function getProductsByPrices(categoryId, diplayOption) {
+    const products = await productModel.getProductsByPrices(categoryId, diplayOption);
+
+    return products;
+}
+
 module.exports = {
     getAllProducts,
     getCategorisedProducts,
-    getSpecificProduct
+    getSpecificProduct,
+    getProductsByPrices
 }

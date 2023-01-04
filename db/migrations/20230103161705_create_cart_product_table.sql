@@ -5,7 +5,8 @@ CREATE TABLE cart_product (
     product_id INT NOT NULL,
     quantity INT NOT NULL,
     CONSTRAINT cart_product_user_fk FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT cart_product_product_fk FOREIGN KEY (user_id) REFERENCES users (id)
+    CONSTRAINT cart_product_product_fk FOREIGN KEY (user_id) REFERENCES users (id),
+    ON DELETE CASCADE
 );
 
 -- migrate:down

@@ -4,7 +4,8 @@ CREATE TABLE delevery_address (
   `orders_id` INT NOT NULL,
   `address` VARCHAR(1000) NOT NULL,
   `phone_number` INT NOT NULL,
-  CONSTRAINT address_delivery_fk FOREIGN KEY (orders_id) REFERENCES orders (id) 
+  CONSTRAINT address_delivery_fk FOREIGN KEY (orders_id) REFERENCES orders (id),
+  ON DELETE CASCADE
 );
 
 -- migrate:down

@@ -4,10 +4,10 @@ const { appDataSource } = require("../database/database");
 async function createOrderTable(userId) {
     try {
         const orderTable = await appDataSource.query(
-            `
-            INSERT INTO orders
-                (user_id) 
-            VALUES (?)
+				`
+					INSERT INTO orders 
+						(user_id) 
+					VALUES (?)
         `, [ userId ]);
 
         return orderTable;
@@ -20,18 +20,19 @@ async function createOrderTable(userId) {
 
 async function createOrdersRequest(orderId, products) {
     try {
-        const query = `
-        INSERT INTO order_product
-            (orders_id, product_id, quantity)
-        VALUES ?;
+        const query = 
+				`
+					INSERT INTO order_product 
+						(orders_id, product_id, quantity)
+        	VALUES ?;
         `
         const values = products.map((product) => {
             return [ orderId, product.id, product.quantity ];
         });
     
-        const result = await appDataSource.query(query, [values]);
+        const requestResult = await appDataSource.query(query, [values]);
 
-        return result;
+        return requestResult;
 
     } catch(err) {
         console.log("ORDER DAO 2")
@@ -39,7 +40,23 @@ async function createOrdersRequest(orderId, products) {
     }
 }
 
+async function deleteOrdersRequest(userId, orderId) {
+    try {
+			const requestResult = await appDataSource.query(
+				`
+					DELETE FROM orders
+					WHERE user_id = ? AND order_id = ?
+				`, [ userId, orderId ]);
+	
+			return requestResult;
+			
+		} catch (err) {
+			throw err;
+		}
+}
+
 module.exports = {
     createOrderTable,
-    createOrdersRequest
+    createOrdersRequest,
+		deleteOrdersRequest
 }

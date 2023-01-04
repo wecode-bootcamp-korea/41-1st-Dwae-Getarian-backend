@@ -1,13 +1,14 @@
 const orderModel = require("../models/orderDao");
 const userModel = require("../models/userDao");
 const paymentModel = require("../models/paymentDao");
+const deliveryModel = require("../models/deliveryModel");
 
 
 async function createOrdersRequest(userId, orderData) {
     const productsData = orderData["products"];
-    const deliveryAddress = orderData["delivery_address"];
-    const paymentData = orderData.payment["payment"];
-    
+    const deliveryData= orderData["delivery_address"];
+    const paymentData = orderData["payment"];
+
     const totalCost = paymentData["total_cost"];
 
     // checks if the user has enough finances to pay the totalCost;
@@ -28,13 +29,22 @@ async function createOrdersRequest(userId, orderData) {
     const orderTable = await orderModel.createOrderTable(userId);
     const orderId = orderTable.insertId;
 
-    await paymentModel.updatePayment(ordersId, paymentData);
+    await deliveryModel.updateDelivery(orderId, deliveryData)
+    await paymentModel.updatePayment(orderId, paymentData);
+
     const orderRequestData = await orderModel.createOrdersRequest(orderId, productsData);
     
     return orderRequestData;
 }
 
+async function deleteOrdersRequest(userId, orderId) {
+    const requestResult = await orderModel.deleteOrdersRequest(userId, orderId);
+
+    return requestResult;
+}
+
 
 module.exports = {
-    createOrdersRequest
+    createOrdersRequest,
+    deleteOrdersRequest
 }

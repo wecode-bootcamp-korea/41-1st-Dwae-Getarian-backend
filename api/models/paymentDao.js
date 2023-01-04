@@ -15,4 +15,5 @@ async function updatePayment(ordersId, paymentData) {
 
 
 module.exports = {
-	updatePayment }
+	updatePayment 
+}

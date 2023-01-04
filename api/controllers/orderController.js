@@ -3,13 +3,13 @@ const { createOrdersRequest } = require("../services/orderService");
 async function ordersRequest(req, res, next) {
     try {
         const userId = req.params.id; 
-        const products = req.body;
+        const orderData = req.body;
     
         if (!products || !userId) {
             return res.status(401).json({ message: "INVALID INPUT (CONTROLLER)" });
         }
         
-        const orderRequest = await createOrdersRequest(userId, products);
+        const orderRequest = await createOrdersRequest(userId, orderData);
     
         if (!orderRequest) {
             return res.status(401).json({ message: "FAILED TO UPDATE (CONTROLLER)" });

@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const jwt = require("jsonwebtoken");
 
-const bcrypt = require("../util/bcrypt");
+const passwordHandler = require("../util/bcrypt");
 const userDatabase = require("../models/userDao");
 
 
@@ -24,8 +24,7 @@ async function signUp(user) {
         throw err;
     }
 
-    const passwordHandler = await new bcrypt(user.password, null);
-    const hashedPassword = await passwordHandler.encode();
+    const hashedPassword = await passwordHandler.encode(user.password);
 
     const result = await userDatabase.signUp(user, hashedPassword);
 
@@ -36,7 +35,7 @@ async function signUp(user) {
 async function logIn(enteredEmail, enteredPassword) {
     const userData = await userDatabase.logIn(enteredEmail);
 
-    const passwordsAreEqual = await new bcrypt(enteredPassword, userData.password);
+    const passwordsAreEqual = await passwordHandler.decode(enteredPassword, userData.password);
 
     if (!passwordsAreEqual) {
         const err = new Error({ message: "INVALID PASSWORD!!!(USER SERVICE)" } );

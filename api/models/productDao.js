@@ -61,11 +61,34 @@ async function searchProducts(keyWord) {
 	return searchedProducts;
 }
 
+async function getBestSellingProducts() {
+	const values = [];
 
+	const productData = await appDataSource.query(
+		`
+			SELECT id FROM products
+		`);
+
+	for (const product of productData) {
+		const array = [];
+		array.push(product.id)
+		values.push(array);
+	}
+
+	const productPurchaseData = await appDataSource.query(
+		`
+		SELECT product_id, SUM(quantity) AS totalPurchased 
+			FROM order_product
+		WHERE product_id = ?;
+		`, values);
+
+	return productPurchaseData;
+}
 
 module.exports = {
     getAllProducts,
     getCategorisedProducts,
     getSpecificProduct,
-		searchProducts
+		searchProducts,
+		getBestSellingProducts
 }

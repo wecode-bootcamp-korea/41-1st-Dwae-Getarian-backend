@@ -25,9 +25,16 @@ async function searchedProducts(keyWord) {
     return searchedProducts;
 }
 
+async function getBestSellingProducts() {
+	const bestSellingProducts = await productModel.getBestSellingProducts();
+
+	return bestSellingProducts;
+}
+
 module.exports = {
     getAllProducts,
     getCategorisedProducts,
     getSpecificProduct,
-    searchedProducts
+    searchedProducts,
+		getBestSellingProducts
 }

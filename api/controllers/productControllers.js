@@ -57,9 +57,16 @@ async function searchedProducts(req, res) {
     return res.status(201).json(searchedProducts);
 }
 
+async function getBestSellingProducts(req, res) {
+	const bestSellingProducts = await productService.getBestSellingProducts();
+
+	return res.status(201).json(bestSellingProducts);
+}
+
 module.exports = {
     getAllProducts,
     getCategorisedProducts,
     getSpecificProduct,
-    searchedProducts
+    searchedProducts,
+		getBestSellingProducts
 } 

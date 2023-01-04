@@ -23,11 +23,17 @@ async function getCart(userId) {
 }
 
 async function postCartItems(userId, product) {
-    const result = await appDataSource.query(
+  const values = "";  
+  
+  const result = await appDataSource.query(
     `
     INSERT INTO cart_product
+      (product_id, price, quantity)
+    VALUES 
+      (?)
+    `, []);
 
-    `)
+    return result;
 }
 
 module.exports = {

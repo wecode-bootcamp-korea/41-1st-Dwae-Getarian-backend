@@ -12,12 +12,12 @@ async function getAllProducts() {
 async function getSpecificProduct(productId) {
     try {
         const product = await appDataSource.query(
-            `
-            SELECT * FROM products p
-                INNER JOIN categories c 
-                ON c.id = p.category_id
+					`
+						SELECT * FROM products p 
+							INNER JOIN categories c 
+							ON c.id = p.category_id
             WHERE p.id = ? 
-            `, [ productId ]);
+          `, [ productId ]);
         
             return product;
             
@@ -29,12 +29,12 @@ async function getSpecificProduct(productId) {
 
 async function getCategorisedProducts(categoryId) {
     const categorisedProducts = await appDataSource.query(
-    `
-    SELECT * FROM products p 
-        INNER JOIN categories c 
-            ON p.category_id = c.id
-    WHERE c.id = ?
-    `, [ categoryId ]);
+			`
+				SELECT * FROM products p 
+        	INNER JOIN categories c 
+          ON p.category_id = c.id
+    		WHERE c.id = ?
+    	`, [ categoryId ]);
 
     return categorisedProducts;
 }

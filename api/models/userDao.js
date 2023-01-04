@@ -2,15 +2,11 @@ const { appDataSource } = require("../database/database");
 
 async function signUp(user, hashedPassword) {
     const result = await appDataSource.query(
-    `
-    INSERT INTO users (
-        name,
-        email,
-        password,
-        gender,
-        date_of_birth)
-    VALUES (?, ?, ?, ?, ?);
-    `, [ 
+			`
+				INSERT INTO users 
+					(name, email, password, gender, date_of_birth)
+    		VALUES (?, ?, ?, ?, ?);
+    	`, [ 
         user.name, 
         user.email, 
         hashedPassword, 
@@ -44,11 +40,11 @@ async function callUserData(column, userId) {
 
 async function updateUserData(userPoint, userId) {
     await appDataSource.query(
-    `
-    UPDATE users
-        SET point = ?
-    WHERE id = ?;
-    `, [ userPoint, userId ]);
+			`
+				UPDATE users 
+					SET point = ? 
+				WHERE id = ?;
+    	`, [ userPoint, userId ]);
 }
 
 

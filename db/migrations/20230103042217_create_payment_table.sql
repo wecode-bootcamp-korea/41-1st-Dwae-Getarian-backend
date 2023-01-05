@@ -6,6 +6,7 @@ CREATE TABLE `payment` (
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `total_cost` DECIMAL(10, 3),
   CONSTRAINT payment_fk FOREIGN KEY (orders_id) REFERENCES orders (id)
+	ON DELETE CASCADE
 );
 
 -- migrate:down

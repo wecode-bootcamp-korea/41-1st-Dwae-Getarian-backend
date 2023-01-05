@@ -5,7 +5,7 @@ CREATE TABLE `cart` (
   `product_id` INT NOT NULL,
   `quantity` INT NOT NULL,
   CONSTRAINT cart_user_fk FOREIGN KEY (user_id) REFERENCES users (id),
-  CONSTRAINT cart_product_fk FOREIGN KEY (product_id) REFERENCES users (id),
+  CONSTRAINT cart_product_fk FOREIGN KEY (product_id) REFERENCES users (id)
   ON DELETE CASCADE
 );
 

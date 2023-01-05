@@ -9,7 +9,7 @@ CREATE TABLE `nutrition` (
   `minerals` DECIMAL(10, 3) NULL,
   `iron` DECIMAL(10, 3) NULL,
   `product_id` INT NOT NULL,
-  CONSTRAINT nutrition_fk FOREIGN KEY (product_id) REFERENCES products (id),
+  CONSTRAINT nutrition_fk FOREIGN KEY (product_id) REFERENCES products (id)
   ON DELETE CASCADE
 );
 

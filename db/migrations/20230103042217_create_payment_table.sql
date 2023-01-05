@@ -5,7 +5,7 @@ CREATE TABLE `payment` (
   `payment_type` VARCHAR(255) NOT NULL,
   `total_cost` DECIMAL(10, 3),
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT payment_fk FOREIGN KEY (orders_id) REFERENCES orders (id),
+  CONSTRAINT payment_fk FOREIGN KEY (orders_id) REFERENCES orders (id)
   ON DELETE CASCADE
 );
 

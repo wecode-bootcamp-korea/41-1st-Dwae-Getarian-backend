@@ -27,11 +27,11 @@ async function getProductsById(req, res, next) {
 
 async function getProductsByCategory(req, res, next) {
     try {
+			console.log(req.query);
         let displayOption = "";
         let displayColumn = "";
-        const categoryId  = req.query.id;
 
-        displayColumn = req.query.display;
+        displayColumn = req.query.sortBy;
         displayOption = req.query.option;
 
         const categorisedProducts = await productService.getProductsByCategory(categoryId, displayColumn, displayOption);

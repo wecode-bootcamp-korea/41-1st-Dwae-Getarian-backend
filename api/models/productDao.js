@@ -59,13 +59,26 @@ async function searchProducts(keyWord) {
 	return searchedProducts;
 }
 
-async function getBestSellingProducts() {
+async function getBestSellingProducts(categoryId) {
+	let condition = "";
+	let variable = "";
 	const values = [];
+	console.log("?????????", categoryId)
+	if (categoryId) {
+		condition = `WHERE c.id = ? `;
+		variable = [categoryId];
+	}
+
+	const query =
+	`
+		SELECT p.id FROM products p
+			INNER JOIN categories c 
+			ON p.category_id = c.id
+	`
 
 	const productData = await appDataSource.query(
-		`
-			SELECT id FROM products
-		`);
+		query + condition, variable
+	);
 
 	for (const product of productData) {
 		const array = [];

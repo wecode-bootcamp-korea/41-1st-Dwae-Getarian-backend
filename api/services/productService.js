@@ -13,8 +13,8 @@ async function getProductsById(productId) {
     return product;
 }
 
-async function getCategorisedProducts(categoryId, displayColumn, displayOption) {
-    const categorisedProducts = await productModel.getCategorisedProducts(categoryId, displayColumn, displayOption);
+async function getProductsById(categoryId, displayColumn, displayOption) {
+    const categorisedProducts = await productModel.getProductsById(categoryId, displayColumn, displayOption);
 
     return categorisedProducts;
 }
@@ -25,32 +25,28 @@ async function searchedProducts(keyWord) {
     return searchedProducts;
 }
 
-async function getBestSellingProducts() {
+async function getBestSellingProducts(categoryId) {
 	const values = [];
-	const productsList = await productModel.getBestSellingProducts();
+	const productsList = await productModel.getBestSellingProducts(categoryId);
 
 	const sortedProductsList = await mergeSort(productsList);
+	const productData = sortedProductsList.slice(0, 11);
 
-	const productData = sortedProductsList.slice(-10);
-	console.log(productData)
 	for (const product of productData) {
 		const array = [];
 		array.push(product["product_id"])
 		values.push(array);
 	}
 
-	console.log(values);
 
-	// const a = await getProductsById(bestSellingProducts);
+	const bestSellingLists = await getProductsById(values);
 
-	// console.log(a)
-
-	// return productsPurchaseStats;
+	return bestSellingLists;
 }
 
 module.exports = {
     getAllProducts,
-    getCategorisedProducts,
+		getProductsById,
     getProductsById,
     searchedProducts,
 		getBestSellingProducts

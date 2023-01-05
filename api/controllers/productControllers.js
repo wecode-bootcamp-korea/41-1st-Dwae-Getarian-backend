@@ -6,10 +6,10 @@ async function getAllProducts(req, res, next) {
     return res.status(201).json({ data: allProducts });
 }
 
-async function getSpecificProduct(req, res, next) {
+async function getProductsById(req, res, next) {
     try {
         const { productId } = req.params;
-        const product = await productService.getSpecificProduct(productId);
+        const product = await productService.getProductsById(productId);
     
         if (!product.length) {
             const err = new Error("failed to fetch a data");
@@ -25,7 +25,7 @@ async function getSpecificProduct(req, res, next) {
 }
 
 
-async function getCategorisedProducts(req, res, next) {
+async function getProductsById(req, res, next) {
     try {
         let displayOption = "";
         let displayColumn = "";
@@ -58,15 +58,21 @@ async function searchedProducts(req, res) {
 }
 
 async function getBestSellingProducts(req, res) {
-	const bestSellingProducts = await productService.getBestSellingProducts();
+	let categoryId = "";
 
-	return res.status(201).json(bestSellingProducts);
+	if (req.query.categoryId) {
+		categoryId = req.query.categoryId;
+	}
+
+	const bestSellingLists = await productService.getBestSellingProducts(categoryId);
+
+	return res.status(201).json(bestSellingLists);
 }
 
 module.exports = {
     getAllProducts,
-    getCategorisedProducts,
-    getSpecificProduct,
+    getProductsById,
+    getProductsById,
     searchedProducts,
 		getBestSellingProducts
 } 

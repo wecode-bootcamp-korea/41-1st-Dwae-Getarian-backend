@@ -1,15 +1,28 @@
 const { appDataSource } = require("../database/database");
 
 async function insertCartItems(userId, product) {
-    const requestCartData = await appDataSource.query(
-    `
-      INSERT INTO cart
-        (user_id, product_id, quantity)
-      VALUES 
-        (?, ?, ?)
-    `, [userId, product.id, product.quantity ]);
+	const checkResult = await checkCartItems(userId, product.id);
 
-    return requestCartData;
+	if (!checkResult) {
+    const requestCartData = await appDataSource.query(
+			`
+				INSERT INTO cart
+					(user_id, product_id, quantity)
+				VALUES 
+					(?, ?, ?)
+			`, [userId, product.id, product.quantity ]);
+	
+			return requestCartData;
+	} else {
+		const requestCartData = await appDataSource.query(
+			`
+				UPDATE cart
+					SET quantity = ?
+				WHERE id = ?;
+			`, [ product.quantity + checkResult.quantity, checkResult.id ]);
+	
+			return requestCartData;
+	}
 }
 
 async function getCartItems(userId) {
@@ -33,6 +46,25 @@ async function getCartItems(userId) {
     return cartData;
 }
 
+async function checkCartItems(userId, productId) {
+	const checkItems = await appDataSource.query(
+		`
+			SELECT * FROM cart c
+			WHERE c.user_id = ? AND c.product_id = ?
+		`, [ userId, productId ]);
+
+
+		if (checkItems.length === 0) {
+			return 0;
+		} 
+
+		const dataObj = {
+			id: checkItems[0].id,
+			quantity: checkItems[0].quantity
+		}
+
+		return dataObj;
+} 
 
 module.exports = {
 	insertCartItems,

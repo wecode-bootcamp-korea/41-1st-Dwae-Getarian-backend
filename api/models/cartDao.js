@@ -24,6 +24,6 @@ async function getCartItems(userId) {
 
 
 module.exports = {
-	insertCartItems
-
+	insertCartItems,
+	getCartItems
 }

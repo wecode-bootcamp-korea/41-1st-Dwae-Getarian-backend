@@ -6,7 +6,14 @@ async function insertCartItems(userId, product) {
     return result;
 }
 
+async function getCartItems(userId) {
+	const cartItems = await cartModel.getCartItems(userId);
+
+	return cartItems;
+}
+
 
 module.exports = {
-	insertCartItems
+	insertCartItems,
+	getCartItems
 }

@@ -16,10 +16,19 @@ async function insertCartItems(req, res) {
 }
 
 async function getCartItems(req, res) {
-	
+	const userId = req.params.id;
+
+	const cartItems = await cartService.getCartItems(userId);
+
+	if (!cartItems.length) {
+		return res.status(404).json({ message: "NO FOLLOWING PRODUCTS TRY PUTTTING SOME ITEMS!!!" });
+	}
+
+	return res.status(200).json(cartItems);
 }
 
 
 module.exports = {
-	insertCartItems
+	insertCartItems,
+	getCartItems
 }

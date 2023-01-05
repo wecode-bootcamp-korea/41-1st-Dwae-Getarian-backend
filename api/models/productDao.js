@@ -29,7 +29,7 @@ async function getProductsById(productId) {
 async function getProductsByCategory(categoryId, displayColumn, displayOption) {
 	let values = "";
 	let conditions = "";
-	let secondQuery = "";
+	let secondQuery = ""; 
 
 	const firstQuery = `SELECT * FROM products p `;
 
@@ -46,7 +46,7 @@ async function getProductsByCategory(categoryId, displayColumn, displayOption) {
 		firstQuery + values + secondQuery, conditions
 	);
 
-    return categorisedProducts;
+  return categorisedProducts;
 }
 
 async function searchProducts(keyWord) {

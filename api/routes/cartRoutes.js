@@ -6,7 +6,7 @@ const routes = express.Router();
 
 
 routes.post("/items/:id", cartController.insertCartItems);
-routes.get("/items", cartController.getCartItems);
+routes.get("/items/user/:id", cartController.getCartItems);
 
 
-module.exports = router;
+module.exports = routes;

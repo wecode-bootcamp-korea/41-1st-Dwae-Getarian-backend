@@ -3,7 +3,7 @@ const productService = require("../services/productService");
 async function getAllProducts(req, res, next) {
     const allProducts = await productService.getAllProducts();
 
-    return res.status(200).json({ data: allProducts });
+    return res.status(200).json(allProducts);
 }
 
 async function getProductsById(req, res, next) {

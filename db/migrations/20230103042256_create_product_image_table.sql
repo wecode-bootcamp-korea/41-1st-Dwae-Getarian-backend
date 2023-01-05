@@ -4,6 +4,7 @@ CREATE TABLE `product_images` (
   `img_url` VARCHAR(255) NULL,
   `product_id` INT NOT NULL,
   CONSTRAINT product_imgages_fk FOREIGN KEY (product_id) REFERENCES products (id) 
+	ON DELETE CASCADE
 );
 
 -- migrate:down

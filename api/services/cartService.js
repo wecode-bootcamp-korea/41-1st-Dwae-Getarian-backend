@@ -1,12 +1,12 @@
 const cartModel = require("../models/cartDao");
 
-async function postCartItems(userId, product) {
-    const result = await cartModel.postCartItems(userId, product);
+async function insertCartItems(userId, product) {
+    const result = await cartModel.insertCartItems(userId, product);
 
     return result;
 }
 
 
 module.exports = {
-    postCartItems
+	insertCartItems
 }

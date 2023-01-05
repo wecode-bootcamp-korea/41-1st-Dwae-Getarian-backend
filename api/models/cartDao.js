@@ -1,18 +1,18 @@
 const { appDataSource } = require("../database/database");
 
-async function upsertCart(userId, product) {
-    const cartData = await appDataSource.query(
+async function insertCartItems(userId, product) {
+    const requestCartData = await appDataSource.query(
     `
       INSERT INTO cart
         (user_id, product_id, quantity)
       VALUES 
-        (?)
+        (?, ?, ?)
     `, [userId, product.id, product.quantity ]);
 
-    return cartData;
+    return requestCartData;
 }
 
-async function getCart(userId) {
+async function getCartItems(userId) {
   const cartData = await appDataSource.query(
     `
       SELECT id FROM cart c
@@ -24,6 +24,6 @@ async function getCart(userId) {
 
 
 module.exports = {
-    upsertCart
-    getCart,
+	insertCartItems
+
 }

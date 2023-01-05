@@ -13,15 +13,15 @@ async function userSignUp(req, res) {
 }   
 
 async function userLogIn(req, res) {
-    const { enteredEmail, enteredPassword } = req.body;
-
-    if (!enteredEmail || !enteredPassword) {
-        return json.status(401).json({ message: "KEY_ERROR INPUTS REQUIRED (USER CONTROLLER)" })
+    const { email, password } = req.body;
+		
+    if (!email || !password) {
+        return res.status(401).json({ message: "KEY_ERROR INPUTS REQUIRED (USER CONTROLLER)" })
     }
 
-    const jwtToken = await userService.userLogIn(enteredEmail, enteredPassword);
+    const jwtToken = await userService.userLogIn(email, password);
 
-    res.status(201).json({ jwtToken: jwtToken });
+    return res.status(201).json({ jwtToken: jwtToken });
 }
 
 module.exports = {

@@ -1,7 +1,7 @@
-const postModel = require("../models/cartDao");
+const cartModel = require("../models/cartDao");
 
-async function postCartItems() {
-    const result = await postModel.postCartItems(userId, product);
+async function postCartItems(userId, product) {
+    const result = await cartModel.postCartItems(userId, product);
 
     return result;
 }

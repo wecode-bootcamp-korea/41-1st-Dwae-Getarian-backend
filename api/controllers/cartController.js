@@ -7,7 +7,7 @@ async function postCartItems(req, res) {
     const result = await cartService.postCartItems(userId, product);
 
     if (!result) {
-        const err = new Error("Not Upated Successfully!!!");
+        const err = new Error("Not Upated Successfully!!! (CART CONTROLLER)");
         err.statusCode = 401;
         throw err;
     }

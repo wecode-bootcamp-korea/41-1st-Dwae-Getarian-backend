@@ -14,8 +14,6 @@ async function getProductsById(productId) {
         const product = await appDataSource.query(
 					`
 						SELECT * FROM products p 
-							INNER JOIN categories c 
-							ON c.id = p.category_id
             WHERE p.id = ? 
           `, [ productId ]);
         
@@ -31,7 +29,7 @@ async function getProductsByCategory(categoryId, displayColumn, displayOption) {
 	let conditions = "";
 	let secondQuery = ""; 
 
-	const firstQuery = `SELECT * FROM products p `;
+	const firstQuery = `SELECT p.id AS id, p.name AS name, p.thumbnail_image AS image FROM products p `;
 
 	if (displayColumn || displayOption) {
 		secondQuery = `ORDER BY ${displayColumn} ${displayOption}`
@@ -63,7 +61,7 @@ async function getBestSellingProducts(categoryId) {
 	let condition = "";
 	let variable = "";
 	const values = [];
-	console.log("?????????", categoryId)
+
 	if (categoryId) {
 		condition = `WHERE c.id = ? `;
 		variable = [categoryId];

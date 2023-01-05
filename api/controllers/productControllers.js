@@ -25,7 +25,7 @@ async function getProductsById(req, res, next) {
 }
 
 
-async function getProductsById(req, res, next) {
+async function getProductsByCategory(req, res, next) {
     try {
         let displayOption = "";
         let displayColumn = "";
@@ -34,7 +34,7 @@ async function getProductsById(req, res, next) {
         displayColumn = req.query.display;
         displayOption = req.query.option;
 
-        const categorisedProducts = await productService.getCategorisedProducts(categoryId, displayColumn, displayOption);
+        const categorisedProducts = await productService.getProductsByCategory(categoryId, displayColumn, displayOption);
     
         if (!categorisedProducts.length) {
             const err = new Error ("No follwing products");
@@ -72,7 +72,7 @@ async function getBestSellingProducts(req, res) {
 module.exports = {
     getAllProducts,
     getProductsById,
-    getProductsById,
+    getProductsByCategory,
     searchedProducts,
 		getBestSellingProducts
 } 

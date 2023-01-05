@@ -13,8 +13,8 @@ async function getProductsById(productId) {
     return product;
 }
 
-async function getProductsById(categoryId, displayColumn, displayOption) {
-    const categorisedProducts = await productModel.getProductsById(categoryId, displayColumn, displayOption);
+async function getProductsByCategory(categoryId, displayColumn, displayOption) {
+    const categorisedProducts = await productModel.getProductsByCategory(categoryId, displayColumn, displayOption);
 
     return categorisedProducts;
 }
@@ -38,7 +38,6 @@ async function getBestSellingProducts(categoryId) {
 		values.push(array);
 	}
 
-
 	const bestSellingLists = await getProductsById(values);
 
 	return bestSellingLists;
@@ -47,7 +46,7 @@ async function getBestSellingProducts(categoryId) {
 module.exports = {
     getAllProducts,
 		getProductsById,
-    getProductsById,
+    getProductsByCategory,
     searchedProducts,
 		getBestSellingProducts
 }

@@ -9,7 +9,7 @@ async function getAllProducts() {
     return allProducts;
 }
 
-async function getSpecificProduct(productId) {
+async function getProductsById(productId) {
     try {
         const product = await appDataSource.query(
 					`
@@ -26,7 +26,7 @@ async function getSpecificProduct(productId) {
     }
 }
 
-async function getCategorisedProducts(categoryId, displayColumn, displayOption) {
+async function getProductsByCategory(categoryId, displayColumn, displayOption) {
 	let values = "";
 	let conditions = "";
 	let secondQuery = "";
@@ -83,10 +83,11 @@ async function getBestSellingProducts() {
 	return productPurchaseData;
 }
 
+
 module.exports = {
     getAllProducts,
-    getCategorisedProducts,
-    getSpecificProduct,
+    getProductsByCategory,
+    getProductsById,
 		searchProducts,
 		getBestSellingProducts
 }

@@ -1,5 +1,5 @@
 const productModel = require("../models/productDao");
-
+const { mergeSort } = require("../util/sorting");
 
 async function getAllProducts() {
     const allProducts = await productModel.getAllProducts();
@@ -7,8 +7,8 @@ async function getAllProducts() {
     return allProducts;
 }
 
-async function getSpecificProduct(productId) {
-    const product = await productModel.getSpecificProduct(productId);
+async function getProductsById(productId) {
+    const product = await productModel.getProductsById(productId);
 
     return product;
 }
@@ -26,15 +26,32 @@ async function searchedProducts(keyWord) {
 }
 
 async function getBestSellingProducts() {
-	const bestSellingProducts = await productModel.getBestSellingProducts();
+	const values = [];
+	const productsList = await productModel.getBestSellingProducts();
 
-	return bestSellingProducts;
+	const sortedProductsList = await mergeSort(productsList);
+
+	const productData = sortedProductsList.slice(-10);
+	console.log(productData)
+	for (const product of productData) {
+		const array = [];
+		array.push(product["product_id"])
+		values.push(array);
+	}
+
+	console.log(values);
+
+	// const a = await getProductsById(bestSellingProducts);
+
+	// console.log(a)
+
+	// return productsPurchaseStats;
 }
 
 module.exports = {
     getAllProducts,
     getCategorisedProducts,
-    getSpecificProduct,
+    getProductsById,
     searchedProducts,
 		getBestSellingProducts
 }

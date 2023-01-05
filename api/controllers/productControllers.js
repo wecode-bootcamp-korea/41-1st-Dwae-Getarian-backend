@@ -3,7 +3,7 @@ const productService = require("../services/productService");
 async function getAllProducts(req, res, next) {
     const allProducts = await productService.getAllProducts();
 
-    return res.status(201).json({ data: allProducts });
+    return res.status(200).json({ data: allProducts });
 }
 
 async function getProductsById(req, res, next) {
@@ -42,7 +42,7 @@ async function getProductsByCategory(req, res, next) {
             throw err;
         }
     
-        return res.status(201).json(categorisedProducts);
+        return res.status(200).json(categorisedProducts);
 
     } catch(err) {
         next(err);
@@ -66,7 +66,7 @@ async function getBestSellingProducts(req, res) {
 
 	const bestSellingLists = await productService.getBestSellingProducts(categoryId);
 
-	return res.status(201).json(bestSellingLists);
+	return res.status(200).json(bestSellingLists);
 }
 
 module.exports = {

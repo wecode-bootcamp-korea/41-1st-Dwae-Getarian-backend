@@ -22,8 +22,7 @@ async function jwtVerify (req, res, next) {
             throw new err;
         }
     
-        req.userId = decoded.userId;
-        req.cartId = decoded.cartId;
+        req.id = decoded.userId;
         
     } catch(err) {
         next(err);

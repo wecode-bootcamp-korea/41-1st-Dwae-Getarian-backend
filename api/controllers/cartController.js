@@ -31,9 +31,6 @@ async function deleteCartItems(req, res) {
 	const userId = req.body.userId;
 	const cartItems = req.body["cart_items"];
 
-	console.log("????", req.body);
-	console.log("!!!!!", cartItems)
-
 	const requestResult = await cartService.deleteCartItems(userId, cartItems);
 
 	if (!requestResult) {

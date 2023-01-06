@@ -12,8 +12,12 @@ async function getCartItems(userId) {
 	return cartItems;
 }
 
+async function deleteCartItems(userId, cartId) {
+
+}
 
 module.exports = {
 	insertCartItems,
-	getCartItems
+	getCartItems,
+	deleteCartItems
 }

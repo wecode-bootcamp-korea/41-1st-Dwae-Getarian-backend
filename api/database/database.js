@@ -8,9 +8,9 @@ const appDataSource = new DataSource({
     port: process.env.DB_PORT,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: "westagram",
+    database: process.env.DB_DATABASE,
 });
 
 module.exports = {
-    appDataSource: appDataSource
+    appDataSource
 }

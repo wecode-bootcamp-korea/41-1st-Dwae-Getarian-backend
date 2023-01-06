@@ -12,5 +12,5 @@ const appDataSource = new DataSource({
 });
 
 module.exports = {
-    appDataSource: appDataSource
+    appDataSource
 }

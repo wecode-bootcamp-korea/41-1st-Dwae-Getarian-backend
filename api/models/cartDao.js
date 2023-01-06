@@ -1,3 +1,4 @@
+const { raw } = require("express");
 const { appDataSource } = require("../database/database");
 
 async function insertCartItems(userId, product) {
@@ -66,7 +67,16 @@ async function checkCartItems(userId, productId) {
 		return dataObj;
 } 
 
+async function deleteCartItems(rawQuery, condition, values) {
+	const deleteRequest = await appDataSource.query(
+		rawQuery + condition
+	, [ values ])
+
+	return deleteRequest;
+}
+
 module.exports = {
 	insertCartItems,
-	getCartItems
+	getCartItems,
+	deleteCartItems
 }

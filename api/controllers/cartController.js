@@ -29,9 +29,12 @@ async function getCartItems(req, res) {
 
 async function deleteCartItems(req, res) {
 	const userId = req.body.userId;
-	const cartId = req.body.cartId;
+	const cartItems = req.body["cart_items"];
 
-	const requestResult = await cartService.deleteCartItems(userId, cartId);
+	console.log("????", req.body);
+	console.log("!!!!!", cartItems)
+
+	const requestResult = await cartService.deleteCartItems(userId, cartItems);
 
 	if (!requestResult) {
 		return res.status(401).json({ message: "delete request failed to handle" })

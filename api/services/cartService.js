@@ -12,8 +12,18 @@ async function getCartItems(userId) {
 	return cartItems;
 }
 
-async function deleteCartItems(userId, cartId) {
+async function deleteCartItems(userId, cartItems) {
+	const values = [];
+	const rawQuery = `DELETE FROM cart `
+	const condition = `WHERE cart.user_id = ${userId} AND cart.id IN (?)`
 
+	for (let i = 0; i < cartItems.length; i++) {
+		values.push(cartItems[i].id)
+	}
+	
+	const deleteRequest = await cartModel.deleteCartItems(rawQuery, condition, values);
+
+	return deleteRequest;
 }
 
 module.exports = {

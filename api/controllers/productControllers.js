@@ -27,7 +27,6 @@ async function getProductsById(req, res, next) {
 
 async function getProductsByCategory(req, res, next) {
     try {
-			console.log(req.query);
         let displayOption = "";
         let displayColumn = "";
 

@@ -1,4 +1,3 @@
-const { raw } = require("express");
 const { appDataSource } = require("../database/database");
 
 async function insertCartItems(userId, product) {

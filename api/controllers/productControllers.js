@@ -64,9 +64,9 @@ async function getBestSellingProducts(req, res) {
 		categoryId = req.query.categoryId;
 	}
 
-	const bestSellingLists = await productService.getBestSellingProducts(categoryId);
+	const bestProductsList = await productService.getBestSellingProducts(categoryId);
 
-	return res.status(200).json(bestSellingLists);
+	return res.status(200).json(bestProductsList);
 }
 
 module.exports = {

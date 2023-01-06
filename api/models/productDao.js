@@ -60,38 +60,33 @@ async function searchProducts(keyWord) {
 async function getBestSellingProducts(categoryId) {
 	let condition = "";
 	let variable = "";
-	const values = [];
 
 	if (categoryId) {
 		condition = `WHERE c.id = ? `;
 		variable = [categoryId];
 	}
 
-	const query =
+	const firstQuery =
 	`
-		SELECT p.id FROM products p
-			INNER JOIN categories c 
-			ON p.category_id = c.id
+	SELECT * FROM (
+		SELECT product_id, SUM(quantity) AS totalPurchased 
+			FROM order_product
+			GROUP BY product_id) AS sub
+	INNER JOIN products p ON sub.product_id = p.id
+	INNER JOIN categories c ON p.category_id = c.id
+	`
+
+	const secondQuery = 
+	`
+	ORDER BY sub.totalPurchased DESC
+	LIMIT 10;
 	`
 
 	const productData = await appDataSource.query(
-		query + condition, variable
+		firstQuery + condition + secondQuery, variable
 	);
 
-	for (const product of productData) {
-		const array = [];
-		array.push(product.id)
-		values.push(array);
-	}
-
-	const productPurchaseData = await appDataSource.query(
-		`
-		SELECT product_id, SUM(quantity) AS totalPurchased 
-			FROM order_product
-		WHERE product_id = ?;
-		`, values);
-
-	return productPurchaseData;
+	return productData;
 }
 
 

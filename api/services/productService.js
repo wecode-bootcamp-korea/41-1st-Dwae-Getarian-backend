@@ -26,21 +26,9 @@ async function searchedProducts(keyWord) {
 }
 
 async function getBestSellingProducts(categoryId) {
-	const values = [];
-	const productsList = await productModel.getBestSellingProducts(categoryId);
+	const bestProductsList = await productModel.getBestSellingProducts(categoryId);
 
-	const sortedProductsList = await mergeSort(productsList);
-	const productData = sortedProductsList.slice(0, 11);
-
-	for (const product of productData) {
-		const array = [];
-		array.push(product["product_id"])
-		values.push(array);
-	}
-
-	const bestSellingLists = await getProductsById(values);
-
-	return bestSellingLists;
+	return bestProductsList;
 }
 
 module.exports = {

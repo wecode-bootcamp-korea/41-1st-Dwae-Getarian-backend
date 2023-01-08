@@ -42,13 +42,14 @@ async function callUserData(column, userId) {
     return columnData;
 }
 
-async function updateUserData(userPoint, userId) {
+async function updateUserData(userPoint, totalCo2, userId) {
     await appDataSource.query(
     `
     UPDATE users
         SET point = ?
+				SET co2 = ?
     WHERE id = ?;
-    `, [ userPoint, userId ]);
+    `, [ userPoint, totalCo2, userId ]);
 }
 
 

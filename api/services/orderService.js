@@ -8,6 +8,7 @@ async function createOrdersRequest(userId, orderData) {
     const productsData = orderData["products"];
     const deliveryData= orderData["delivery_address"];
     const paymentData = orderData["payment"];
+		const totalCo2 = orderData["total_co2"];
 
     const totalCost = paymentData["total_cost"];
 
@@ -23,10 +24,10 @@ async function createOrdersRequest(userId, orderData) {
     }
 
     // then updates it on the userData to the userPoint;
-    await userModel.updateUserData(userPointAfterPayment, userId); 
+    await userModel.updateUserData(userPointAfterPayment, totalCo2, userId); 
 
     // then create an order table for the user;
-    const orderTable = await orderModel.createOrderTable(userId);
+    const orderTable = await orderModel.createOrderTable(userId, totalCost);
     const orderId = orderTable.insertId;
 
     await deliveryModel.updateDelivery(orderId, deliveryData)
@@ -37,10 +38,18 @@ async function createOrdersRequest(userId, orderData) {
     return orderRequestData;
 }
 
-async function deleteOrdersRequest(userId, orderId) {
-    const requestResult = await orderModel.deleteOrdersRequest(userId, orderId);
+async function deleteOrdersRequest(userId, orderId, refundData) {
+	const userCurrentPoint = await userModel.callUserData("point", userId);
+	const userCurrentCo2 = await userModel.callUserData("co2", userId);
 
-    return requestResult;
+	const updatedPoint = userCurrentPoint + refundData["total_cost"];
+	const updatedCo2 = userCurrentCo2 + refundData["total_co2"];
+
+	const customerRefund = await userModel.updateUserData(updatedPoint, updatedCo2, userId);
+	
+  const requestResult = await orderModel.deleteOrdersRequest(userId, orderId);
+
+  return requestResult;
 }
 
 

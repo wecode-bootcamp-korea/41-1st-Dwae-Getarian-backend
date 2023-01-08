@@ -1,14 +1,14 @@
 const { appDataSource } = require("../database/database");
 
 
-async function createOrderTable(userId) {
+async function createOrderTable(userId, totalCost) {
     try {
 			const orderTable = await appDataSource.query(
 				`
 					INSERT INTO orders 
-						(user_id) 
-					VALUES (?)
-    		`, [ userId ]);
+						(user_id, total_cost) 
+					VALUES (?, ?)
+    		`, [ userId, totalCost ]);
 
     return orderTable;
         

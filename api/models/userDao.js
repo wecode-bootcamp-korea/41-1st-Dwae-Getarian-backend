@@ -1,38 +1,24 @@
 const { appDataSource } = require("../database/database");
 
 async function signUp(user, hashedPassword) {
-    const requestResult = await appDataSource.query(
+    const result = await appDataSource.query(
     `
     INSERT INTO users (
         name,
         email,
         password,
-        gender_id,
+        gender,
         date_of_birth)
     VALUES (?, ?, ?, ?, ?);
     `, [ 
         user.name, 
         user.email, 
         hashedPassword, 
-        user["gender_id"], 
-        user["date_of_birth"] 
+        user.gender, 
+        user[date_of_birth] 
     ]);
 
-    return requestResult
-}
-
-async function upsertUserAddress(userId, user) {
-	const requestResult = await appDataSource.query(
-		`
-			INSERT INTO users_address ( 
-				address,
-				postcode,
-				phone_number,
-				user_id )
-			VALUES (?, ?, ?, ?)
-		`, [ user.address, user.postcode, user["phone_number"], userId ]);
-
-	return requestResult;
+    return result
 }
 
 async function logIn(userEmail) {
@@ -56,19 +42,19 @@ async function callUserData(column, userId) {
     return columnData;
 }
 
-async function updateUserData(userPoint, userId) {
+async function updateUserData(userPoint, totalCo2, userId) {
     await appDataSource.query(
     `
     UPDATE users
         SET point = ?
+				SET co2 = ?
     WHERE id = ?;
-    `, [ userPoint, userId ]);
+    `, [ userPoint, totalCo2, userId ]);
 }
 
 
 module.exports = {
     signUp,
-		upsertUserAddress,
     logIn,
     callUserData,
     updateUserData

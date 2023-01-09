@@ -28,7 +28,7 @@ async function insertCartItems(userId, product) {
 async function getCartItems(userId) {
   const cartData = await appDataSource.query(
 	`
-	SELECT u.name AS username, (
+	SELECT (
 		JSON_ARRAYAGG(
 			JSON_OBJECT(
 				"product_id", p.id,

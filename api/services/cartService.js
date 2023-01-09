@@ -8,7 +8,7 @@ async function insertCartItems(userId, product) {
 
 async function getCartItems(userId) {
 	const cartItems = await cartModel.getCartItems(userId);
-
+	
 	return cartItems;
 }
 

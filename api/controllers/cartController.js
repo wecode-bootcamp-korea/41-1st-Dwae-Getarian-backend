@@ -1,7 +1,7 @@
 const cartService = require("../services/cartService");
 
 async function insertCartItems(req, res) {
-    const userId = req.id;
+    const userId = req.params.id;
     const product = req.body;
 
     const requestResult = await cartService.insertCartItems(userId, product);
@@ -16,15 +16,17 @@ async function insertCartItems(req, res) {
 }
 
 async function getCartItems(req, res) {
-	const userId = req.id;
+	const userId = req.params.id;
 
 	const cartItems = await cartService.getCartItems(userId);
 
 	if (!cartItems.length) {
 		return res.status(404).json({ message: "NO FOLLOWING PRODUCTS TRY PUTTTING SOME ITEMS!!!" });
 	}
+	
+	const products = cartItems[0].products;
 
-	return res.status(200).json(cartItems);
+	return res.status(200).json(products);
 }
 
 async function deleteCartItems(req, res) {

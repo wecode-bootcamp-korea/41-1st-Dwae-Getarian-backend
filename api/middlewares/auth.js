@@ -30,5 +30,5 @@ async function jwtVerify (req, res, next) {
 }
 
 module.exports = {
-    jwtVerify
+  jwtVerify
 }

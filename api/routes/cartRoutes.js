@@ -5,9 +5,8 @@ const { jwtVerify } = require("../middlewares/auth");
 
 const routes = express.Router();
 
-// jwtVerify,
-routes.post("/items/:id", cartController.insertCartItems);
-routes.get("/items/user/:id", cartController.getCartItems);
+routes.post("/items", jwtVerify, cartController.insertCartItem);
+routes.get("/items/user", jwtVerify, cartController.getCartItems);
 routes.delete("/items", jwtVerify, cartController.deleteCartItems)
 
 module.exports = routes;

@@ -1,18 +1,18 @@
 const cartService = require("../services/cartService");
 
-async function insertCartItems(req, res) {
-    const userId = req.params.id;
-    const product = req.body;
+async function insertCartItem(req, res) {
+	const userId = req.params.id;
+	const product = req.body;
 
-    const requestResult = await cartService.insertCartItems(userId, product);
+	const requestResult = await cartService.insertCartItems(userId, product);
 
-    if (!requestResult) {
-        const err = new Error("Not Upated Successfully!!! (CART CONTROLLER)");
-        err.statusCode = 401;
-        throw err;
-    }
+	if (!requestResult) {
+			const err = new Error("Not Upated Successfully!!! (CART CONTROLLER)");
+			err.statusCode = 401;
+			throw err;
+	}
 
-    return res.status(201).json({ message: "PRODUCT UPDATED SUCCESSFULLY!!! (cartController)"});
+	return res.status(201).json({ message: "PRODUCT UPDATED SUCCESSFULLY!!! (cartController)"});
 }
 
 async function getCartItems(req, res) {
@@ -40,12 +40,11 @@ async function deleteCartItems(req, res) {
 	}
 
 	return res.status(200).json({ message: "delete request handled successfully" })
-	
 } 
 
 
 module.exports = {
-	insertCartItems,
+	insertCartItem,
 	getCartItems,
 	deleteCartItems
 }

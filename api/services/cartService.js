@@ -6,7 +6,7 @@ async function insertCartItems(userId, product) {
     return result;
 }
 
-async function getCartItems(userId) {
+async function getCartItem(userId) {
 	const cartItems = await cartModel.getCartItems(userId);
 	
 	return cartItems;
@@ -28,6 +28,6 @@ async function deleteCartItems(userId, cartItems) {
 
 module.exports = {
 	insertCartItems,
-	getCartItems,
+	getCartItem,
 	deleteCartItems
 }

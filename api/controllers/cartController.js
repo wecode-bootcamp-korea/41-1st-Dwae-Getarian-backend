@@ -1,7 +1,7 @@
 const cartService = require("../services/cartService");
 
 async function insertCartItems(req, res) {
-    const userId = req.params.id;
+    const userId = req.id;
     const product = req.body;
 
     const requestResult = await cartService.insertCartItems(userId, product);

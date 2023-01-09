@@ -10,7 +10,7 @@ async function insertCartItems(userId, product) {
 					(user_id, product_id, quantity)
 				VALUES 
 					(?, ?, ?)
-			`, [userId, product.id, product.quantity ]);
+			`, [ userId, product["product_id"], product.quantity ]);
 	
 			return requestCartData;
 	} else {

@@ -1,7 +1,7 @@
 const { appDataSource } = require("../database/database");
 
 async function insertCartItems(userId, product) {
-	const checkResult = await checkCartItems(userId, product.id);
+	const checkResult = await checkCartItems(userId, product["product_id"]);
 
 	if (!checkResult) {
     const requestCartData = await appDataSource.query(
@@ -52,7 +52,6 @@ async function checkCartItems(userId, productId) {
 			SELECT * FROM cart c
 			WHERE c.user_id = ? AND c.product_id = ?
 		`, [ userId, productId ]);
-
 
 		if (checkItems.length === 0) {
 			return 0;

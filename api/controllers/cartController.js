@@ -16,7 +16,7 @@ async function insertCartItems(req, res) {
 }
 
 async function getCartItems(req, res) {
-	const userId = req.params.id;
+	const userId = req.id;
 
 	const cartItems = await cartService.getCartItems(userId);
 
@@ -28,7 +28,7 @@ async function getCartItems(req, res) {
 }
 
 async function deleteCartItems(req, res) {
-	const userId = req.body.userId;
+	const userId = req.id;
 	const cartItems = req.body["cart_items"];
 
 	const requestResult = await cartService.deleteCartItems(userId, cartItems);

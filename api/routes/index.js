@@ -1,11 +1,11 @@
 const express = require("express");
 
-const orderRoutes = require("./orderRoutes");
+const userRoutes = require("./userRoutes");
 const productRoutes = require("./productRoutes");
 
 const routes = express.Router();
 
-routes.use("/order", orderRoutes);
+routes.use("/user", userRoutes);
 routes.use("/product", productRoutes);
 
 

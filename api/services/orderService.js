@@ -6,11 +6,6 @@ const deliveryModel = require("../models/deliveryModel");
 
 async function createOrdersRequest(userId, orderData) {
     const { products, delivery_address, payment, total_co2 } = orderData;
-		productsData = orderData["products"];
-    const deliveryData= orderData["delivery_address"];
-    const paymentData = orderData["payment"];
-		const totalCo2 = orderData["total_co2"];
-
     const totalCost = payment["total_cost"];
 
     // checks if the user has enough finances to pay the totalCost;
@@ -25,16 +20,16 @@ async function createOrdersRequest(userId, orderData) {
     }
 
     // then updates it on the userData to the userPoint;
-    await userModel.updateUserData(userPointAfterPayment, totalCo2, userId); 
+    await userModel.updateUserData(userPointAfterPayment, total_co2, userId); 
 
     // then create an order table for the user;
     const orderTable = await orderModel.createOrderTable(userId, totalCost);
     const orderId = orderTable.insertId;
 
-    await deliveryModel.updateDelivery(orderId, deliveryData)
-    await paymentModel.updatePayment(orderId, paymentData);
+    await deliveryModel.updateDelivery(orderId, delivery_address)
+    await paymentModel.updatePayment(orderId, payment);
 
-    const orderRequestData = await orderModel.createOrdersRequest(orderId, productsData);
+    const orderRequestData = await orderModel.createOrdersRequest(orderId, products);
     
     return orderRequestData;
 }

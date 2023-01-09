@@ -1,14 +1,14 @@
 const orderService = require("../services/orderService");
 
-async function createOrdersRequest(req, res) {
-	const userId = req.params.id; 
+async function createOrder(req, res) {
+	const userId = req.id; 
 	const orderData = req.body;
 	
 	if (!orderData  || !userId) {
 			return res.status(401).json({ message: "INVALID INPUT (CONTROLLER)" });
 	}
 	
-	const orderRequest = await orderService.createOrdersRequest(userId, orderData);
+	const orderRequest = await orderService.createOrder(userId, orderData);
 
 	if (!orderRequest) {
 			return res.status(401).json({ message: "FAILED TO UPDATE (CONTROLLER)" });
@@ -18,8 +18,8 @@ async function createOrdersRequest(req, res) {
 };
 
 
-async function deleteOrdersRequest(req, res) {
-	const userId = req.params.userId;
+async function deleteOrder(req, res) {
+	const userId = req.id;
 	const orderId = req.query.orderId;
 	const refundData = req.body;
 
@@ -27,7 +27,7 @@ async function deleteOrdersRequest(req, res) {
 			return res.status(404).json({ message: "INVALID INPUT (CONTROLLER)"});
 	}
 
-	const deleteRequest = await deleteOrdersRequest(userId, orderId, refundData);
+	const deleteRequest = await deleteOrder(userId, orderId, refundData);
 
 	if (!deleteRequest) {
 			return res.status(401).json({ message: "FAILED TO HANDLE THE REQUEST (CONTROLLER)" });
@@ -38,6 +38,6 @@ async function deleteOrdersRequest(req, res) {
 
 
 module.exports = {
-	createOrdersRequest,
-  deleteOrdersRequest
+	createOrder,
+  deleteOrder
 }

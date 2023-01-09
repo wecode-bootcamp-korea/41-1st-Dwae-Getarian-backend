@@ -5,10 +5,9 @@ function asyncErrorHandler(func) {
 }
 
 function globalErrorHandler (err, req, res, next) {
+  const statusCode = 500 || err.statusCode;
     
-    const statusCode = 500 || err.statusCode;
-    
-    res.status(statusCode).json({ message: err.message });
+  res.status(statusCode).json({ message: err.message });
 }
 
 

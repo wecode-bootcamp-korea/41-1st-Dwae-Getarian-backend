@@ -34,8 +34,10 @@ async function userSignUp(user) {
 
     const requestResult = await userDatabase.signUp(user, hashedPassword);
 		const userId = requestResult.insertId;
+		
 
-		const addressTable = await userDatabase.upsertUserAddress(userId, user);
+		console.log("?????????", userId, user)
+		const addressTable = await userDatabase.storeUserAddress(userId, user);
 
 		if (!addressTable) {
 			throw new Error("No TABLE (USER SERVICE)");

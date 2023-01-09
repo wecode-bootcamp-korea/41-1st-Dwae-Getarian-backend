@@ -1,5 +1,4 @@
 const productModel = require("../models/productDao");
-const { mergeSort } = require("../util/sorting");
 
 async function getAllProducts() {
     const allProducts = await productModel.getAllProducts();

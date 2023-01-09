@@ -7,18 +7,36 @@ async function signUp(user, hashedPassword) {
         name,
         email,
         password,
-        gender,
+        gender_id,
         date_of_birth)
-    VALUES (?, ?, ?, ?, ?);
-    `, [ 
+    VALUES (?, ?, ?, ?, ?);`
+		, [ 
         user.name, 
         user.email, 
         hashedPassword, 
-        user.gender, 
-        user[date_of_birth] 
+        user["gender_id"], 
+        user["date_of_birth"]
     ]);
 
     return result
+}
+
+async function storeUserAddress(userId, user) {
+	const requestResult = await appDataSource.query(
+		`
+		INSERT INTO users_address (
+			address,
+			postcode,
+			phone_number,
+			user_id)
+		VALUES (?, ?, ?, ?)
+		`, [ 
+			user.address, 
+			user.postcode, 
+			user["phone_number"], 
+			userId ]);
+
+	return requestResult;
 }
 
 async function logIn(userEmail) {
@@ -55,6 +73,7 @@ async function updateUserData(userPoint, totalCo2, userId) {
 
 module.exports = {
     signUp,
+		storeUserAddress,
     logIn,
     callUserData,
     updateUserData

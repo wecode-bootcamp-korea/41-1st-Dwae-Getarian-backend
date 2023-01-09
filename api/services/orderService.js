@@ -5,12 +5,13 @@ const deliveryModel = require("../models/deliveryModel");
 
 
 async function createOrdersRequest(userId, orderData) {
-    const productsData = orderData["products"];
+    const { products, delivery_address, payment, total_co2 } = orderData;
+		productsData = orderData["products"];
     const deliveryData= orderData["delivery_address"];
     const paymentData = orderData["payment"];
 		const totalCo2 = orderData["total_co2"];
 
-    const totalCost = paymentData["total_cost"];
+    const totalCost = payment["total_cost"];
 
     // checks if the user has enough finances to pay the totalCost;
     const userPointData = await userModel.callUserData("point", userId);

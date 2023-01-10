@@ -1,6 +1,6 @@
 const { appDataSource } = require("../database/database");
 
-async function insertCartItems(userId, product) {
+async function insertCartItem(userId, product) {
 	const checkResult = await checkCartItems(userId, product["product_id"]);
 
 	if (!checkResult) {
@@ -74,7 +74,7 @@ async function deleteCartItems(rawQuery, condition, values) {
 }
 
 module.exports = {
-	insertCartItems,
+	insertCartItem,
 	getCartItems,
 	deleteCartItems
 }

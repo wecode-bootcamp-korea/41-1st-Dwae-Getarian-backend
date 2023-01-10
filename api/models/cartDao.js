@@ -1,57 +1,49 @@
 const { appDataSource } = require("../database/database");
 
-async function insertCartItem(userId, product) {
-	const checkResult = await checkCartItems(userId, product["product_id"]);
+async function insertCartItem(userId, productId, quantity) {
+	const checkResult = await checkCartItems(userId, productId);
 
 	if (!checkResult) {
-    const requestCartData = await appDataSource.query(
-			`
-				INSERT INTO cart
-					(user_id, product_id, quantity)
-				VALUES 
-					(?, ?, ?)
-			`, [ userId, product["product_id"], product.quantity ]);
+    const requestCartData = await appDataSource.query(`
+			INSERT INTO cart
+				(user_id, product_id, quantity)
+			VALUES 
+				(${userId}, ${productId}, ${quantity})
+		`);
 	
 			return requestCartData;
 	} else {
-		const requestCartData = await appDataSource.query(
-			`
-				UPDATE cart
-					SET quantity = ?
-				WHERE id = ?;
-			`, [ product.quantity + checkResult.quantity, checkResult.id ]);
+		const requestCartData = await appDataSource.query(`
+			UPDATE cart
+				SET quantity = ${quantity + checkResult.quantity}
+			WHERE id = ${checkResult.id};
+		`);
 	
-			return requestCartData;
+		return requestCartData;
 	}
 }
 
 async function getCartItems(userId) {
-	const cartData = await appDataSource.query(
-		`
+	return await appDataSource.query(`
 		SELECT (
-			JSON_ARRAYAGG(
-				JSON_OBJECT(
-					"product_id", p.id,
-					"product_name", p.name,
-					"product_image", p.thumbnail_image, 
-					"price", p.price,
-					"quantity", c.quantity))) AS products
+			p.id AS id, 
+			p.name AS name, 
+			p.thumbnail_image AS image, 
+			p.price AS price, 
+			c.quantity AS category
 		FROM cart c
 		INNER JOIN users u ON u.id = c.user_id
 		INNER JOIN products p ON p.id = c.product_id
-		WHERE u.id = ?
+		WHERE u.id = ${userId}
 		GROUP BY u.id;
-		`, [ userId ]);
-	
-	return cartData;
+		`);
 }
 
 async function checkCartItems(userId, productId) {
-	const checkItems = await appDataSource.query(
-		`
-			SELECT * FROM cart c
-			WHERE c.user_id = ? AND c.product_id = ?
-		`, [ userId, productId ]);
+	const checkItems = await appDataSource.query(`
+		SELECT * FROM cart c
+		WHERE c.user_id = ${userId} AND c.product_id = ?
+	`, [ productId ]);
 
 		if (checkItems.length === 0) {
 			return 0;
@@ -65,12 +57,18 @@ async function checkCartItems(userId, productId) {
 		return dataObj;
 } 
 
-async function deleteCartItems(rawQuery, condition, values) {
-	const deleteRequest = await appDataSource.query(
-		rawQuery + condition
-	, [ values ])
+async function deleteCartItems(userId, cartItems) {
+	const values = [];
 
-	return deleteRequest;
+	for (let i = 0; i < cartItems.length; i++) {
+		values.push(cartItems[i].id)
+	}
+
+	return await appDataSource.query(`
+		DELETE FROM cart 
+		WHERE cart.user_id = ${userId} 
+		AND cart.id IN (?)`
+	, [ values ])
 }
 
 module.exports = {

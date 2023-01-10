@@ -1,45 +1,66 @@
 const { appDataSource } = require("../database/database");
 
-async function signUp(user, hashedPassword) {
-    const result = await appDataSource.query(
-    `
-    INSERT INTO users (
-        name,
-        email,
-        password,
-        gender,
-        date_of_birth)
-    VALUES (?, ?, ?, ?, ?);
-    `, [ 
-        user.name, 
-        user.email, 
-        hashedPassword, 
-        user.gender, 
-        user[date_of_birth] 
-    ]);
+async function userSignUpProcess(user, hashedPassword) {
+	const queryRunner = appDataSource.createQueryRunner();
+	await queryRunner.connect();
+	await queryRunner.startTransaction();
 
-    return result
+	try {
+		const result = await queryRunner.query(`
+			INSERT INTO users (
+				name,
+				email,
+				password,
+				gender_id,
+				date_of_birth)
+			VALUES (?, ?, ?, ?, ?);`
+			, [ 
+					user.name, 
+					user.email, 
+					hashedPassword, 
+					user["gender_id"], 
+					user["date_of_birth"]
+			]);
+		
+		const userId = result.insertId;
+
+		await queryRunner.query(`
+		INSERT INTO users_address (
+			address,
+			postcode,
+			phone_number,
+			user_id)
+		VALUES (?, ?, ?, ${userId})
+		`, [ 
+			user.address, 
+			user.postcode, 
+			user["phone_number"], 
+		]);
+
+	} catch(err) {
+		await queryRunner.rollbackTransaction();
+		throw err;
+	} finally {
+		await queryRunner.release();
+	}
 }
 
 async function logIn(userEmail) {
-    const result = await appDataSource.query(
+  return await appDataSource.query(
     `
     SELECT * FROM users
     WHERE email = ?;
     `, [userEmail]);
-        
-    return result;
 }
 
-// SQL injection 공격 생각 서드파티 패키지 설치
-async function callUserData(column, userId) {
-    const columnData = await appDataSource.query(
+async function getUserData(userId) {
+    const userData = await appDataSource.query(
     `
-    SELECT ${column} from users
+    SELECT * from users
     WHERE id = ?;
     `, [ userId ]);
 
-    return columnData;
+    return userData;
 }
 
 async function updateUserData(userPoint, totalCo2, userId) {
@@ -54,8 +75,8 @@ async function updateUserData(userPoint, totalCo2, userId) {
 
 
 module.exports = {
-    signUp,
-    logIn,
-    callUserData,
-    updateUserData
+	userSignUpProcess,
+  logIn,
+  updateUserData,
+	getUserData
 }

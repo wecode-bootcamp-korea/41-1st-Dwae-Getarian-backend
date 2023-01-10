@@ -14,7 +14,7 @@ async function createOrdersRequest(userId, orderData) {
     const userPointAfterPayment = userPoint - totalCost;
 
     if (userPointAfterPayment < 0) {
-        const err = new Error("NOT ENOUGH MOENY WHY DON'T YOU TOP UP? (ORDER SERVICE)");
+        const err = new Error("NOT ENOUGH MOENY WHY DON'T YOU TOP UP?");
         err.statusCode = 404;
         throw err;
     }

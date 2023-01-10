@@ -13,7 +13,6 @@ async function createOrderTable(userId, totalCost) {
     return orderTable;
         
     } catch(err) {
-        console.log("ORDER DAO1")
         throw err;
     } 
 }
@@ -35,7 +34,6 @@ async function createOrdersRequest(orderId, products) {
         return requestResult;
 
     } catch(err) {
-        console.log("ORDER DAO 2")
         throw err;
     }
 }

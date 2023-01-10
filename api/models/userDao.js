@@ -31,7 +31,6 @@ async function logIn(userEmail) {
     return result;
 }
 
-// SQL injection 공격 생각 서드파티 패키지 설치
 async function callUserData(column, userId) {
     const columnData = await appDataSource.query(
     `

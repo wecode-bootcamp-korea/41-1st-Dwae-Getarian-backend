@@ -5,9 +5,8 @@ const { createOrdersRequest, deleteOrdersRequest } = require("../controllers/ord
 const { jwtVerify } = require("../middlewares/auth");
 
 const routes = express.Router();
-// , jwtVerify
 
-routes.post("/items/:id", asyncErrorHandler(createOrdersRequest));
-routes.delete("/", asyncErrorHandler(deleteOrdersRequest));
+routes.post("/items/:id", jwtVerify, asyncErrorHandler(createOrdersRequest));
+routes.delete("/", jwtVerify, asyncErrorHandler(deleteOrdersRequest));
 
 module.exports = routes;

@@ -35,8 +35,6 @@ async function userSignUp(user) {
     const requestResult = await userDatabase.signUp(user, hashedPassword);
 		const userId = requestResult.insertId;
 		
-
-		console.log("?????????", userId, user)
 		const addressTable = await userDatabase.storeUserAddress(userId, user);
 
 		if (!addressTable) {

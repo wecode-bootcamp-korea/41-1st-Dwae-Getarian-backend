@@ -6,7 +6,7 @@ CREATE TABLE `users_address` (
   `phone_number` VARCHAR(255) NOT NULL,
   `user_id` INT NOT NULL,
   CONSTRAINT users_address_fk FOREIGN KEY (user_id) REFERENCES users (id)
-	ON DELETE CASCADE
+  ON DELETE CASCADE
 );
 
 -- migrate:down

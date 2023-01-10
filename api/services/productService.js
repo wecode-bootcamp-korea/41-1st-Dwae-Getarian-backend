@@ -1,11 +1,4 @@
 const productModel = require("../models/productDao");
-const { mergeSort } = require("../util/sorting");
-
-async function getAllProducts() {
-    const allProducts = await productModel.getAllProducts();
-
-    return allProducts;
-}
 
 async function getProductsById(productId) {
     const product = await productModel.getProductsById(productId);
@@ -13,8 +6,8 @@ async function getProductsById(productId) {
     return product;
 }
 
-async function getProductsByCategory(categoryId, displayColumn, displayOption) {
-    const categorisedProducts = await productModel.getProductsByCategory(categoryId, displayColumn, displayOption);
+async function getProductsByCategory(queryParams) {
+    const categorisedProducts = await productModel.getProductsByCategory(queryParams);
 
     return categorisedProducts;
 }
@@ -25,14 +18,13 @@ async function searchedProducts(keyWord) {
     return searchedProducts;
 }
 
-async function getBestSellingProducts(categoryId) {
-	const bestProductsList = await productModel.getBestSellingProducts(categoryId);
+async function getBestSellingProducts(queryParams) {
+	const bestProductsList = await productModel.getBestSellingProducts(queryParams);
 
 	return bestProductsList;
 }
 
 module.exports = {
-    getAllProducts,
 		getProductsById,
     getProductsByCategory,
     searchedProducts,

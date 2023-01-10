@@ -1,19 +1,19 @@
 const { appDataSource } = require("../database/database");
-const { queryBuilder }  = require("./productQuery");
+const { queryBuilder }  = require("./product.query");
 
 async function getProductsById(productId) {
-    try {
-        const product = await appDataSource.query(
-					`
-						SELECT * FROM products p 
-            WHERE p.id = ? 
-          `, [ productId ]);
-        
-            return product;
-            
-    } catch(err) {
-        throw err;
-    }
+	try {
+		const product = await appDataSource.query(
+			`
+				SELECT * FROM products p 
+				WHERE p.id = ? 
+			`, [ productId ]);
+		
+				return product;
+				
+} catch(err) {
+		throw err;
+}
 }
 
 async function getProductsByCategory(queryParams) {
@@ -31,11 +31,12 @@ async function getProductsByCategory(queryParams) {
 		rawQuery + joinClause + whereClause + orderClause + pageClause
 	);
 
+
   return categorisedProducts;
 }
 
 async function searchProducts(keyWord) {
-	const { searchClause } = await queryBuilder(keyword);
+	const { searchClause } = await queryBuilder(keyWord);
 
 	const rawQuery = 
 	`

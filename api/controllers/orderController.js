@@ -1,49 +1,30 @@
 const orderService = require("../services/orderService");
-
+const { detectError } = require("../util/detectError");
+ 
 async function createOrder(req, res) {
-	const userId = req.params.id; 
+	const userId = req.userId; 
 	const orderData = req.body;
 	
-	if (!orderData  || !userId) {
-		const err = new Error("KEY ERROR");
-		err.status = 401;
-
-		throw err;
+	if (!orderData || !userId) {
+		detectError("NO INPUT DATA", 401);
 	}
 	
-	const orderRequest = await orderService.createOrder(userId, orderData);
-
-	if (!orderRequest) {
-		const err = new Error("DATABASE ERROR");
-		err.status = 401;
-
-		throw err;
-	}
+	await orderService.createOrder(userId, orderData);
 
 	return res.status(200).json({ message: "ORDER SUCCESSFULLY HANDLED" });
 };
 
 
 async function deleteOrder(req, res) {
-	const userId = req.id;
+	const userId = req.userId;
 	const orderId = req.query.orderId;
-	const { total_cost, total_co2 } = req.body;
+	const { totalCost, totalCo2 } = req.body;
 
-	if (!userId || !orderId || !total_cost || !total_co2) {
-		const err = new Error("INPUT ERROR");
-		err.status = 401;
-
-		throw err;
+	if (!orderId || !totalCost || !totalCo2) {
+		detectError("INPUT ERROR", 401);
 	}
 
-	const deleteRequest = await orderService.deleteOrder(userId, orderId, total_cost, total_co2);
-
-	if (!deleteRequest) {
-		const err = new Error("DATABASE ERROR");
-		err.status = 401;
-
-		throw err;
-	}
+	await orderService.deleteOrder(userId, orderId, totalCost, totalCo2);
 
 	return res.status(200).json({ message: "DELETING THE ORDER SUCCESSFULLY HANDLED" });
 };

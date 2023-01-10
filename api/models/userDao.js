@@ -55,18 +55,17 @@ async function logIn(userEmail) {
 async function getUserData(userId) {
   return await appDataSource.query(`
   	SELECT * from users
-  	WHERE id = ?;
-  `, [ userId ]);
-
+  	WHERE id = ${userId};
+  `);
 }
 
 async function updateUserData(userPoint, totalCo2, userId) {
 	return await appDataSource.query(`
   UPDATE users
-    SET point = ?,
-		co2 = ?
-  WHERE id = ?;
-  `, [ userPoint, totalCo2, userId ]);
+    SET point = ${userPoint},
+		co2 = ${totalCo2}
+  WHERE id = ${userId}
+	`)
 }
 
 

@@ -1,7 +1,7 @@
 const orderService = require("../services/orderService");
 
 async function createOrder(req, res) {
-	const userId = req.id; 
+	const userId = req.params.id; 
 	const orderData = req.body;
 	
 	if (!orderData  || !userId) {

@@ -9,8 +9,8 @@ async function createOrder(userId, orderData) {
     const totalCost = payment["total_cost"];
 
     // checks if the user has enough finances to pay the totalCost;
-    const userPointData = await userModel.callUserData("point", userId);
-    const userPoint = userPointData[0].point;
+    const [ userPointData ] = await userModel.callUserData("point", userId);
+    const userPoint = userPointData["point"];
     const userPointAfterPayment = userPoint - totalCost;
 
     if (userPointAfterPayment < 0) {

@@ -42,11 +42,11 @@ async function callUserData(column, userId) {
 }
 
 async function updateUserData(userPoint, totalCo2, userId) {
-    await appDataSource.query(
+	return await appDataSource.query(
     `
     UPDATE users
-        SET point = ?
-				SET co2 = ?
+        SET point = ?,
+				co2 = ?
     WHERE id = ?;
     `, [ userPoint, totalCo2, userId ]);
 }

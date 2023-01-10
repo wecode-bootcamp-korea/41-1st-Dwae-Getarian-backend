@@ -2,33 +2,29 @@ require("dotenv").config();
 
 const jwt = require("jsonwebtoken");
 
-async function jwtVerify (req, res, next) {
-    try {
-        const token = req.headers.authorization;
+const { detectError } = require("../util/detectError");
 
-        if (!token) {
-            const err = new Error({ message: "Invalid Token (AUTH.JS)" });
-            err.status(401);
-    
-            throw new err;
-        }
-    
-        const decoded = await jwt.verify(token, process.env.SECRET_KEY);
-    
-        if (!decoded) {
-            const err = new Error({ message: "Decoding Failed!!! (AUTH.JS)" });
-            err.status(401);
-    
-            throw new err;
-        }
-    
-        req.id = decoded.userId;
-        
-    } catch(err) {
-        next(err);
-    }
+async function jwtVerify (req, res, next) {
+	try {
+		const token = req.headers.authorization;
+
+		if (!token) {
+			detectError("TOKEN DOES NOT EXIST", 401);
+		}
+
+		const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+
+		if (!decoded) {
+			detectError("DECODING FAILED", 401);
+		}
+
+		req.userId = decoded.userId;
+		
+} catch(err) {
+		next(err);
+}
 }
 
 module.exports = {
-    jwtVerify
+  jwtVerify
 }

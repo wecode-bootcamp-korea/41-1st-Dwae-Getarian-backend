@@ -17,7 +17,7 @@ async function createOrderTable(userId, totalCost) {
     } 
 }
 
-async function createOrdersRequest(orderId, products) {
+async function createOrder(orderId, products) {
     try {
         const query = 
 				`
@@ -38,7 +38,7 @@ async function createOrdersRequest(orderId, products) {
     }
 }
 
-async function deleteOrdersRequest(userId, orderId) {
+async function deleteOrder(userId, orderId) {
     try {
 			const requestResult = await appDataSource.query(
 				`
@@ -55,6 +55,6 @@ async function deleteOrdersRequest(userId, orderId) {
 
 module.exports = {
     createOrderTable,
-    createOrdersRequest,
-		deleteOrdersRequest
+    createOrder,
+		deleteOrder
 }

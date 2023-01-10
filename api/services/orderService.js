@@ -4,7 +4,7 @@ const paymentModel = require("../models/paymentDao");
 const deliveryModel = require("../models/deliveryModel");
 
 
-async function createOrdersRequest(userId, orderData) {
+async function createOrder(userId, orderData) {
     const { products, delivery_address, payment, total_co2 } = orderData;
     const totalCost = payment["total_cost"];
 
@@ -29,12 +29,12 @@ async function createOrdersRequest(userId, orderData) {
     await deliveryModel.updateDelivery(orderId, delivery_address)
     await paymentModel.updatePayment(orderId, payment);
 
-    const orderRequestData = await orderModel.createOrdersRequest(orderId, products);
+    const orderRequestData = await orderModel.createOrder(orderId, products);
     
     return orderRequestData;
 }
 
-async function deleteOrdersRequest(userId, orderId, refundData) {
+async function deleteOrder(userId, orderId, refundData) {
 	const userCurrentPoint = await userModel.callUserData("point", userId);
 	const userCurrentCo2 = await userModel.callUserData("co2", userId);
 
@@ -43,13 +43,13 @@ async function deleteOrdersRequest(userId, orderId, refundData) {
 
 	const customerRefund = await userModel.updateUserData(updatedPoint, updatedCo2, userId);
 	
-  const requestResult = await orderModel.deleteOrdersRequest(userId, orderId);
+  const requestResult = await orderModel.deleteOrder(userId, orderId);
 
   return requestResult;
 }
 
 
 module.exports = {
-    createOrdersRequest,
-    deleteOrdersRequest
+    createOrder,
+    deleteOrder
 }

@@ -7,6 +7,6 @@ const { jwtVerify } = require("../middlewares/auth");
 const routes = express.Router();
  
 routes.post("/items", jwtVerify, asyncErrorHandler(createOrder));
-routes.delete("/", jwtVerify, asyncErrorHandler(deleteOrder));
+routes.delete("", jwtVerify, asyncErrorHandler(deleteOrder));
 
 module.exports = routes;

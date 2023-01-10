@@ -1,5 +1,11 @@
 const productModel = require("../models/productDao");
 
+async function getAllProducts() {
+    const allProducts = await productModel.getAllProducts();
+
+    return allProducts;
+}
+
 async function getProductsById(productId) {
     const product = await productModel.getProductsById(productId);
 

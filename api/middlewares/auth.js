@@ -2,27 +2,23 @@ require("dotenv").config();
 
 const jwt = require("jsonwebtoken");
 
+const { detectError } = require("../util/detectError");
+
 async function jwtVerify (req, res, next) {
 	try {
 		const token = req.headers.authorization;
 
 		if (!token) {
-				const err = new Error("Invalid Token (AUTH.JS)");
-				err.statusCode(401);
-
-				throw err;
+			detectError("TOKEN DOES NOT EXIST", 401);
 		}
 
 		const decoded = await jwt.verify(token, process.env.SECRET_KEY);
 
 		if (!decoded) {
-				const err = new Error("Decoding Failed!!! (AUTH.JS)");
-				err.statusCode(401);
-
-				throw err;
+			detectError("DECODING FAILED", 401);
 		}
 
-		req.id = decoded.userId;
+		req.userId = decoded.userId;
 		
 } catch(err) {
 		next(err);

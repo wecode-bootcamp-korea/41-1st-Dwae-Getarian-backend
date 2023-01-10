@@ -1,13 +1,12 @@
 const express = require("express");
 
 const { asyncErrorHandler } = require("../middlewares/errorHandler");
-const { createOrder, deleteOrder } = require("../controllers/orderController");
+const { createOrdersRequest, deleteOrdersRequest } = require("../controllers/orderController");
 const { jwtVerify } = require("../middlewares/auth");
 
 const routes = express.Router();
- 
-// jwtVerify,
-routes.post("/items/:id", asyncErrorHandler(createOrder));
-routes.delete("", jwtVerify, asyncErrorHandler(deleteOrder));
+
+routes.post("/items/:id", jwtVerify, asyncErrorHandler(createOrdersRequest));
+routes.delete("/", jwtVerify, asyncErrorHandler(deleteOrdersRequest));
 
 module.exports = routes;

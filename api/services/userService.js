@@ -2,61 +2,50 @@ require('dotenv').config();
 
 const jwt = require("jsonwebtoken");
 
+const { detectError } = require("../util/detectError");
 const passwordHandler = require("../util/bcrypt");
 const userDatabase = require("../models/userDao");
 
 
 async function userSignUp(user) {
-		
-    // eg test@email.com
-    const emailValidation = new RegExp(
-			'[a-z0-9]+@[a-z]+\.[a-z]{2,3}'
-    ); 
+  // eg test@email.com
+  const emailValidation = new RegExp(
+		'[a-z0-9]+@[a-z]+\.[a-z]{2,3}'
+  ); 
 
-    // Minimum eight characters, at least one letter and one number:
-    const passwordValidation = new RegExp(
-      "^[0-9a-z]+$"
-    );
+  // Minimum eight characters, at least one letter and one number:
+  const passwordValidation = new RegExp(
+    "^[0-9a-z]+$"
+  );
 
-    if (!emailValidation.test(user.email)) {
-        const err = new Error({ message: "INVALID INPUT DATA (USER SERVICE) EMAIL"});
-        err.statusCode = 401; 
-        throw err;
-    }
+  if (!emailValidation.test(user.email)) {
+		detectError("INVALID EMAIL", 401);
+	}
 
-		if (!passwordValidation.test(user.password)) {
-			const err = new Error({ message: "INVALID INPUT DATA (USER SERVICE) PASSWORD"});
-			err.statusCode = 401; 
-			throw err;
-		}
+	if (!passwordValidation.test(user.password)) {
+		detectError("INVALID PASSWORD", 401);
+	}
 
-    const hashedPassword = await passwordHandler.encode(user.password);
+  const hashedPassword = await passwordHandler.encode(user.password);
 
-    const requestResult = await userDatabase.signUp(user, hashedPassword);
-		const userId = requestResult.insertId;
-
-
-    return requestResult;
+	await userDatabase.userSignUpProcess(user, hashedPassword);
 }
 
-async function userLogIn(enteredEmail, enteredPassword) {
-    const [ userData ] = await userDatabase.logIn(enteredEmail);
+async function userLogIn(email, password) {
+	const [ userData ] = await userDatabase.logIn(email);
 
-    const passwordsAreEqual = await passwordHandler.decode(enteredPassword, userData.password);
+	const passwordsAreEqual = await passwordHandler.decode(password, userData.password);
 
-    if (!passwordsAreEqual) {
-        const err = new Error({ message: "INVALID PASSWORD!!!(USER SERVICE)" } );
-        err.statusCode = 401;
-        throw err;
-    }
+	if (!passwordsAreEqual) {
+		detectError("PASSWORDS ARE NOT EQUAL");
+	}
 
-    const jwtToken = jwt.sign({userId: userData.id}, process.env.SECRET_KEY);
+	const jwtToken = jwt.sign({userId: userData.id}, process.env.SECRET_KEY);
 
-    return jwtToken;
+	return jwtToken;
 }
-
  
 module.exports = {
-    userSignUp,
-    userLogIn
+  userSignUp,
+  userLogIn
 }

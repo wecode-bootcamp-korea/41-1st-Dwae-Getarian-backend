@@ -4,3 +4,4 @@ node_modules
 practice.js
 .vscode
 launch.json
+schema.sql

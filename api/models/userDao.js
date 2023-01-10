@@ -7,15 +7,15 @@ async function signUp(user, hashedPassword) {
         name,
         email,
         password,
-        gender,
+        gender_id,
         date_of_birth)
     VALUES (?, ?, ?, ?, ?);
     `, [ 
         user.name, 
         user.email, 
         hashedPassword, 
-        user.gender, 
-        user[date_of_birth] 
+        user["gender_id"], 
+        user["date_of_birth"] 
     ]);
 
     return result
@@ -37,7 +37,6 @@ async function callUserData(column, userId) {
     SELECT ${column} from users
     WHERE id = ?;
     `, [ userId ]);
-
     return columnData;
 }
 

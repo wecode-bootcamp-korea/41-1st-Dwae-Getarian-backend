@@ -6,16 +6,12 @@ const SORT_MAPPER = Object.freeze({
 	best: `sub.totalPurchased DESC `
 });
 
-const LIMIT_MAPPER = Object.freeze({
-	list_10: `LIMIT 10 `,
-	list_8: `LIMIT 8`
-});
-
 class QueryBuilder {
 	constructor(queryParams) {
 		this.sortBy = queryParams.sortBy || `price_high`;
 		this.categoryId = queryParams.categoryId || undefined;
-		this.page = queryParams.page || `list_10`;
+		this.limit = queryParams.limit || 10;
+		this.offset = queryParams.offset || 0;
 	}
 
 	createOrderClause() { 
@@ -35,14 +31,14 @@ class QueryBuilder {
 				return `categories.id = ${option}`;
 			});
 
-			return `WHERE ${whereClause.join(` AND `)}`;
+			return `WHERE ${whereClause.join(` OR `)}`;
 		}
 		else if (this.categoryId) return `WHERE categories.id = ${this.categoryId}`;
 		else return `WHERE TRUE`;
 	}
 
 	createLimitClause() {
-		return LIMIT_MAPPER[this.page];
+		return `LIMIT ${Number(this.limit)} OFFSET ${Number(this.offset)}`;
 	}
 
 	buildQuery() {

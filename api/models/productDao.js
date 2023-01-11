@@ -1,5 +1,4 @@
 const { appDataSource } = require("../database/database");
-const { queryBuilder }  = require("./product.query");
 const QueryBuilder = require("./productList.query");
 
 async function getProductsById(productId) {
@@ -14,63 +13,69 @@ async function getProductsById(productId) {
 }
 
 async function getProducts(queryParams) {
-
-	const queryBuilder = new QueryBuilder(queryParams);
-	const extraSql = queryBuilder.buildQuery();
-
-	return await appDataSource.query(`
-	SELECT 
-		products.id 								AS id, 
-		products.name 							AS name, 
-		products.thumbnail_image 		AS image, 
-		products.price 							AS price
-	FROM products 
-	INNER JOIN categories 
-		ON products.category_id = categories.id 
-	${extraSql}
-	`);
+	try {
+		const queryBuilder = new QueryBuilder(queryParams);
+		const extraSql = queryBuilder.buildQuery();
+	
+		return await appDataSource.query(`
+		SELECT 
+			products.id 								AS id, 
+			products.name 							AS name, 
+			products.thumbnail_image 		AS image, 
+			products.price 							AS price
+		FROM products 
+		INNER JOIN categories 
+			ON products.category_id = categories.id 
+		${extraSql}
+		`);
+	} catch(err) {
+		throw err;
+	}
 }
 
 async function searchProducts(keyWord) {
-	const { searchClause } = await queryBuilder(keyWord);
-
-	const rawQuery = 
-	`
-	SELECT name, thumbnail_image FROM products
-	`
-
-	const searchedProducts = await appDataSource.query(
-		rawQuery + searchClause
-);
-
-	return searchedProducts;
+	try {
+		return await appDataSource.query(`
+		SELECT name, thumbnail_image FROM products
+			WHERE name LIKE '${keyWord}%' 
+ 			OR name LIKE '%${keyWord}%'
+ 			OR name LIKE '%${keyWord}'
+	`);
+	} catch(err) {
+		throw err;
+	}
 }
 
 async function getBestSellingProducts(queryParams) {
-
-	const queryBuilder = new QueryBuilder(queryParams);
-	const extraSql = await queryBuilder.buildQuery();
-
-	return await appDataSource.query(`
-		SELECT 
-			products.name AS name,
-			products.thumbnail_image AS image,
-			products.price AS price,
-			sub.totalPurchased AS sales
-		FROM (
-			SELECT product_id, SUM(quantity) AS totalPurchased 
-				FROM order_product
-				GROUP BY product_id) AS sub
-		INNER JOIN products ON sub.product_id = products.id
-		${extraSql}
-	`
-	);
+	try {
+		const queryBuilder = new QueryBuilder(queryParams);
+		const extraSql = await queryBuilder.buildQuery();
+	
+		return await appDataSource.query(`
+			SELECT 
+				products.id 											AS id,
+				products.name 										AS name,
+				products.thumbnail_image 					AS image,
+				products.price 										AS price,
+				sub.totalPurchased 								AS sales
+			FROM (
+				SELECT product_id, SUM(quantity) 	AS totalPurchased 
+					FROM order_product
+					GROUP BY product_id) AS sub
+			INNER JOIN products ON sub.product_id = products.id
+			INNER JOIN categories ON categories.id = products.category_id
+			${extraSql}
+		`
+		);
+	} catch(err) {
+		throw err;
+	}
 }
 
 
 module.exports = {
-    getProducts,
-    getProductsById,
-		searchProducts,
-		getBestSellingProducts
+  getProducts,
+  getProductsById,
+	searchProducts,
+	getBestSellingProducts
 }

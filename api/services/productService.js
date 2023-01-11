@@ -1,22 +1,25 @@
+const { checkSpecial } = require("../util/checkSpecial");
+const { detectError } = require("../util/detectError");
 const productModel = require("../models/productDao");
 
 async function getProductsById(productId) {
-    const product = await productModel.getProductsById(productId);
+  const product = await productModel.getProductsById(productId);
 
-    return product;
+  return product;
 }
 
 async function getProducts(queryParams) {
-	const { sortBy, offset, limit, categoryId } = queryParams;
   const categorisedProducts = await productModel.getProducts(queryParams);
 
   return categorisedProducts;
 }
 
 async function searchedProducts(keyWord) {
-    const searchedProducts = await productModel.searchProducts(keyWord);
+	if(checkSpecial(keyWord)) detectError("NOT VALID INPUT", 401);
 
-    return searchedProducts;
+  const searchedProducts = await productModel.searchProducts(keyWord);
+
+  return searchedProducts;
 }
 
 async function getBestSellingProducts(queryParams) {
@@ -26,8 +29,8 @@ async function getBestSellingProducts(queryParams) {
 }
 
 module.exports = {
-		getProductsById,
-    getProducts,
-    searchedProducts,
-		getBestSellingProducts
+	getProductsById,
+  getProducts,
+  searchedProducts,
+	getBestSellingProducts
 }

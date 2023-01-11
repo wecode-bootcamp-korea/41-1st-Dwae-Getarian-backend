@@ -28,9 +28,7 @@ async function userSignUp(user) {
 
   const hashedPassword = await passwordHandler.encode(user.password);
 
-  const requestResult = await userDatabase.userSignUpProcess(user, hashedPassword);
-
-  return requestResult;
+  return await userDatabase.userSignUpProcess(user, hashedPassword);
 }
 
 async function userLogIn(email, password) {

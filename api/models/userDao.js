@@ -36,7 +36,7 @@ async function userSignUpProcess(user, hashedPassword) {
 			user.postcode, 
 			user["phone_number"], 
 		]);
-
+		await queryRunner.commitTransaction();
 	} catch(err) {
 		await queryRunner.rollbackTransaction();
 		throw err;

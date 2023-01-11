@@ -19,7 +19,7 @@ async function jwtVerify (req, res, next) {
 		}
 
 		req.userId = decoded.userId;
-		
+		next();
 } catch(err) {
 		next(err);
 }

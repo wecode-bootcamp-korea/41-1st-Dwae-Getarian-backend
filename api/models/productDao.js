@@ -1,38 +1,54 @@
 const { appDataSource } = require("../database/database");
 const { queryBuilder }  = require("./product.query");
 
+
+
+
 async function getProductsById(productId) {
 	try {
-		const product = await appDataSource.query(
-			`
-				SELECT * FROM products p 
-				WHERE p.id = ? 
-			`, [ productId ]);
-		
-				return product;
-				
-} catch(err) {
+		return await appDataSource.query(`
+			SELECT * FROM products p 
+			WHERE p.id = ? 
+		`, [ productId ]);					
+	} catch(err) {
 		throw err;
-}
+	}
 }
 
-async function getProductsByCategory(queryParams) {
-	const { joinClause, orderClause, whereClause, pageClause } = await queryBuilder(queryParams);
+async function getProducts(queryParams) {
+	const sortMapper = Object.freeze({
+		price_high: `price DESC `,
+		price_low: `price ASC `,
+		new: `created_at DESC `,
+		old: `created_at ASC `,
+	});
 
-	const rawQuery = `
-	SELECT 
-		products.id AS id, 
-		products.name AS name, 
-		products.thumbnail_image AS image, 
-		products.price AS price
-	FROM products `;
+
+	const orderClauseBuilder = (queryParams) => {
+		console.log("orderClauseBuilder", queryParams)
+		Object.entries(queryParams).map(([key, values]) => {
+			console.log("order????", values)
+			let endOrderClause = sortMapper[values];
+			return endOrderClause;
+		})
+	} 
+
+	console.log("!!!!!", orderClauseBuilder(queryParams));
+
 	
-	const categorisedProducts = await appDataSource.query(
-		rawQuery + joinClause + whereClause + orderClause + pageClause
-	);
-
-
-  return categorisedProducts;
+	// return await appDataSource.query(`
+	// SELECT 
+	// 	products.id 								AS id, 
+	// 	products.name 							AS name, 
+	// 	products.thumbnail_image 		AS image, 
+	// 	products.price 							AS price
+	// FROM products 
+	// INNER JOIN categories 
+	// 	ON products.category_id = categories.id 
+	// 	${whereClause}
+	// 	${orderClause}
+	// 	${LimitClause}
+	// `);
 }
 
 async function searchProducts(keyWord) {
@@ -77,7 +93,7 @@ async function getBestSellingProducts(queryParams) {
 
 
 module.exports = {
-    getProductsByCategory,
+    getProducts,
     getProductsById,
 		searchProducts,
 		getBestSellingProducts

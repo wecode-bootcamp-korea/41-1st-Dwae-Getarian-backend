@@ -1,40 +1,26 @@
+const { detectError } = require("../util/detectError");
 const productService = require("../services/productService");
 
 async function getProductsById(req, res, next) {
-	try {
-		const { productId } = req.params;
-		const product = await productService.getProductsById(productId);
+	const { productId } = req.params;
+	const product = await productService.getProductsById(productId);
 
-		if (!product.length) {
-				const err = new Error("failed to fetch a data");
-				err.statusCode = 404;
-				throw err;
-		}
+	if (!product.length) {
+		detectError("NO FOLLOWING PRODUCT", 401);
+	}
 
-		return res.status(200).json(product);
-		
-} catch(err) {
-		next(err);
+	return res.status(200).json(product);
 } 
-}
 
+async function getProducts(req, res, next) {
+	const queryParams = req.query;
+	const categorisedProducts = await productService.getProducts(queryParams);
 
-async function getProductsByCategory(req, res, next) {
-    try {
-        let displayOption = "";
-        let displayColumn = "";
+	if (!categorisedProducts.length) {
+		detectError("NO FOLLOWING PRODUCTS", 401);
+	}
 
-		if (!categorisedProducts.length) {
-				const err = new Error ("No follwing products");
-				err.statusCode = 404;
-				throw err;
-		}
-
-		return res.status(200).json(categorisedProducts);
-
-} catch(err) {
-		next(err);
-}
+	return res.status(200).json(categorisedProducts);
 }
 
 async function searchedProducts(req, res) {
@@ -55,7 +41,7 @@ async function getBestSellingProducts(req, res) {
 
 module.exports = {
     getProductsById,
-    getProductsByCategory,
+    getProducts,
     searchedProducts,
 		getBestSellingProducts
 } 

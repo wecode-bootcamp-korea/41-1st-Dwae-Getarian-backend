@@ -1,6 +1,6 @@
 const { appDataSource } = require("../database/database");
 const { queryBuilder }  = require("./product.query");
-
+const QueryBuilder = require("./productList.query");
 
 
 
@@ -16,39 +16,21 @@ async function getProductsById(productId) {
 }
 
 async function getProducts(queryParams) {
-	const sortMapper = Object.freeze({
-		price_high: `price DESC `,
-		price_low: `price ASC `,
-		new: `created_at DESC `,
-		old: `created_at ASC `,
-	});
 
+	const queryBuilder = new QueryBuilder(queryParams);
+	const extraQuery = queryBuilder.buildQuery();
 
-	const orderClauseBuilder = (queryParams) => {
-		console.log("orderClauseBuilder", queryParams)
-		Object.entries(queryParams).map(([key, values]) => {
-			console.log("order????", values)
-			let endOrderClause = sortMapper[values];
-			return endOrderClause;
-		})
-	} 
-
-	console.log("!!!!!", orderClauseBuilder(queryParams));
-
-	
-	// return await appDataSource.query(`
-	// SELECT 
-	// 	products.id 								AS id, 
-	// 	products.name 							AS name, 
-	// 	products.thumbnail_image 		AS image, 
-	// 	products.price 							AS price
-	// FROM products 
-	// INNER JOIN categories 
-	// 	ON products.category_id = categories.id 
-	// 	${whereClause}
-	// 	${orderClause}
-	// 	${LimitClause}
-	// `);
+	return await appDataSource.query(`
+	SELECT 
+		products.id 								AS id, 
+		products.name 							AS name, 
+		products.thumbnail_image 		AS image, 
+		products.price 							AS price
+	FROM products 
+	INNER JOIN categories 
+		ON products.category_id = categories.id 
+	${extraQuery}
+	`);
 }
 
 async function searchProducts(keyWord) {

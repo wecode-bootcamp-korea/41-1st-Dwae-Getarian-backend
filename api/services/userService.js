@@ -27,7 +27,6 @@ async function userSignUp(user) {
 	}
 
   const hashedPassword = await passwordHandler.encode(user.password);
-
   const requestResult = await userDatabase.userSignUpProcess(user, hashedPassword);
 
   return requestResult;
@@ -35,7 +34,7 @@ async function userSignUp(user) {
 
 async function userLogIn(email, password) {
 	const [ userData ] = await userDatabase.logIn(email);
-
+	console.log(userData)
 	const passwordsAreEqual = await passwordHandler.decode(password, userData.password);
 
 	if (!passwordsAreEqual) {

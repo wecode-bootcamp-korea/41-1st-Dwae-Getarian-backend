@@ -6,6 +6,6 @@ const { asyncErrorHandler } = require("../middlewares/errorHandler");
 const routes = express.Router();
 
 routes.post("/signup", asyncErrorHandler(userSignUp));
-routes.post("/login", asyncErrorHandler(userLogIn));
+routes.post("/login", userLogIn);
 
 module.exports = routes;

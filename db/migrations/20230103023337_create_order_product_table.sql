@@ -4,7 +4,7 @@ CREATE TABLE `order_product` (
   `orders_id` INT NOT NULL,
   `product_id` INT NOT NULL,
   `quantity` INT NOT NULL,
-  `order_status_id` INT NOT NULL,
+  `order_status_id` INT NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT order_product_orders_fk FOREIGN KEY (orders_id) REFERENCES orders (id),
   CONSTRAINT order_product_product_fk FOREIGN KEY (product_id) REFERENCES products (id),

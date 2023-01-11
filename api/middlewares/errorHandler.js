@@ -5,7 +5,6 @@ function globalErrorHandler (err, req, res, next) {
     res.status(statusCode).json({ message: err.message });
 }
 
-
 module.exports = {
     globalErrorHandler
 }

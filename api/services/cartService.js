@@ -1,21 +1,16 @@
 const cartModel = require("../models/cartDao");
 
 async function insertCartItem(userId, productId, quantity) {
-  const result = await cartModel.insertCartItems(userId, productId, quantity);
-
-  return result;
+  return await cartModel.insertCartItem(userId, productId, quantity);
 }
 
 async function getCartItem(userId) {
-	const cartItems = await cartModel.getCartItems(userId);
-	
-	return cartItems;
+	return await cartModel.getCartItems(userId);
 }
 
 async function deleteCartItems(userId, cartItems) {
-	const deleteRequest = await cartModel.deleteCartItems(userId, cartItems);
+	return await cartModel.deleteCartItems(userId, cartItems);
 
-	return deleteRequest;
 }
 
 module.exports = {

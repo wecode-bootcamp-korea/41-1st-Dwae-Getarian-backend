@@ -7,7 +7,7 @@ async function insertCartItem(req, res) {
 
 	if (!productId || !quantity) detectError("NO INPUT DATA", 401);
 
-	await cartService.insertCartItems(userId, productId, quantity);
+	await cartService.insertCartItem(userId, productId, quantity);
 
 	return res.status(201).json({ message: "PRODUCT UPDATED SUCCESSFULLY!!! (cartController)"});
 }

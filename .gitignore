@@ -2,5 +2,7 @@ node_modules
 .env
 .DS_Store
 practice.js
-schema.sql
+practice copy.js
 .vscode
+launch.json
+schema.sql

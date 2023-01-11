@@ -23,14 +23,15 @@ async function insertCartItem(userId, productId, quantity) {
 	}
 }
 
-async function getCartItems(userId) {
+async function getCartItem(userId) {
 	return await appDataSource.query(`
-		SELECT (
-			p.id AS id, 
-			p.name AS name, 
-			p.thumbnail_image AS image, 
-			p.price AS price, 
-			c.quantity AS category
+		SELECT 
+			JSON_ARRAYAGG(JSON_OBJECT(
+			"id", p.id, 
+			"name", p.name, 
+			"image", p.thumbnail_image, 
+			"price", p.price, 
+			"category", c.quantity)) AS data
 		FROM cart c
 		INNER JOIN users u ON u.id = c.user_id
 		INNER JOIN products p ON p.id = c.product_id
@@ -73,6 +74,6 @@ async function deleteCartItems(userId, cartItems) {
 
 module.exports = {
 	insertCartItem,
-	getCartItems,
+	getCartItem,
 	deleteCartItems
 }

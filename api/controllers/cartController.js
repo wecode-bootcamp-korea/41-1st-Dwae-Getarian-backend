@@ -7,14 +7,14 @@ async function insertCartItem(req, res) {
 
 	if (!productId || !quantity) detectError("NO INPUT DATA", 401);
 
-	await cartService.insertCartItems(userId, productId, quantity);
+	await cartService.insertCartItem(userId, productId, quantity);
 
 	return res.status(201).json({ message: "PRODUCT UPDATED SUCCESSFULLY!!! (cartController)"});
 }
 
 async function getCartItems(req, res) {
 	const userId = req.userId;
-	const cartItems = await cartService.getCartItems(userId);
+	const cartItems = await cartService.getCartItem(userId);
 
 	if (!cartItems.length) detectError("NO FOLLOWING PRODUCTS TRY PUTTTING SOME ITEMS!!!", 401);
 	

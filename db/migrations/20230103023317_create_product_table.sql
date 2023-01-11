@@ -5,13 +5,14 @@ CREATE TABLE `products` (
   `thumbnail_image` VARCHAR(1000) NOT NULL,
   `description` VARCHAR(500) NOT NULL,
   `price` DECIMAL(10, 3) NOT NULL,
-  `base_unit` INT NOT NULL,
   `total_quantity` INT NULL,
   `co2` INT NULL,
   `category_id` INT NOT NULL,
+	`is_mealkit` BOOLEAN NOT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT products_fk FOREIGN KEY (category_id) REFERENCES categories (id)
+	ON DELETE CASCADE
 );
 
 -- migrate:down

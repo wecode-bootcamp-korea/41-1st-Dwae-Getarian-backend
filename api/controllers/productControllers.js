@@ -1,21 +1,21 @@
 const productService = require("../services/productService");
 
 async function getProductsById(req, res, next) {
-    try {
-        const { productId } = req.params;
-        const product = await productService.getProductsById(productId);
-    
-        if (!product.length) {
-            const err = new Error("failed to fetch a data");
-            err.statusCode = 404;
-            throw err;
-        }
-    
-        return res.status(200).json(product);
-        
-    } catch(err) {
-        next(err);
-    } 
+	try {
+		const { productId } = req.params;
+		const product = await productService.getProductsById(productId);
+
+		if (!product.length) {
+				const err = new Error("failed to fetch a data");
+				err.statusCode = 404;
+				throw err;
+		}
+
+		return res.status(200).json(product);
+		
+} catch(err) {
+		next(err);
+} 
 }
 
 
@@ -38,11 +38,11 @@ async function getProductsByCategory(req, res, next) {
 }
 
 async function searchedProducts(req, res) {
-    const { keyWord } = req.body
+	const { keyWord } = req.body
 
-    const searchedProducts = await productService.searchedProducts(keyWord);
+	const searchedProducts = await productService.searchedProducts(keyWord);
 
-    return res.status(201).json(searchedProducts);
+	return res.status(201).json(searchedProducts);
 }
 
 async function getBestSellingProducts(req, res) {

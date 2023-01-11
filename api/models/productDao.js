@@ -1,89 +1,75 @@
 const { appDataSource } = require("../database/database");
-
-async function getAllProducts() {
-    const allProducts = await appDataSource.query(
-    `
-    	SELECT * FROM products;
-    `);
-
-    return allProducts;
-}
+const { queryBuilder }  = require("./product.query");
 
 async function getProductsById(productId) {
-    try {
-        const product = await appDataSource.query(
-					`
-						SELECT * FROM products p 
-            WHERE p.id = ? 
-          `, [ productId ]);
-        
-            return product;
-            
-    } catch(err) {
-        throw err;
-    }
+	try {
+		const product = await appDataSource.query(
+			`
+				SELECT * FROM products p 
+				WHERE p.id = ? 
+			`, [ productId ]);
+		
+				return product;
+				
+} catch(err) {
+		throw err;
+}
 }
 
-async function getProductsByCategory(categoryId, displayColumn, displayOption) {
-	let values = "";
-	let conditions = "";
-	let secondQuery = ""; 
+async function getProductsByCategory(queryParams) {
+	const { joinClause, orderClause, whereClause, pageClause } = await queryBuilder(queryParams);
 
-	const firstQuery = `SELECT p.id AS id, p.name AS name, p.thumbnail_image AS image FROM products p `;
-
-	if (displayColumn || displayOption) {
-		secondQuery = `ORDER BY ${displayColumn} ${displayOption}`
-	}
-
-	if (categoryId) {
-		values = `INNER JOIN categories c ON p.category_id = c.id WHERE c.id = ? `
-		conditions = [ `${ categoryId }` ];
-	}
-
+	const rawQuery = `
+	SELECT 
+		products.id AS id, 
+		products.name AS name, 
+		products.thumbnail_image AS image, 
+		products.price AS price
+	FROM products `;
+	
 	const categorisedProducts = await appDataSource.query(
-		firstQuery + values + secondQuery, conditions
+		rawQuery + joinClause + whereClause + orderClause + pageClause
 	);
+
 
   return categorisedProducts;
 }
 
 async function searchProducts(keyWord) {
+	const { searchClause } = await queryBuilder(keyWord);
+
+	const rawQuery = 
+	`
+	SELECT name, thumbnail_image FROM products
+	`
+
 	const searchedProducts = await appDataSource.query(
-		`
-			SELECT name, thumbnail_image FROM products
-			WHERE name LIKE '${keyWord}%';
-		`);
+		rawQuery + searchClause
+);
 
 	return searchedProducts;
 }
 
-async function getBestSellingProducts(categoryId) {
-	let condition = "";
-	let variable = "";
+async function getBestSellingProducts(queryParams) {
 
-	if (categoryId) {
-		condition = `WHERE c.id = ? `;
-		variable = [categoryId];
-	}
+	const { joinClause, orderClause, whereClause, pageClause } = await queryBuilder(queryParams);
 
-	const firstQuery =
+	const rawQuery =
 	`
-	SELECT * FROM (
+	SELECT 
+		products.name AS name,
+		products.thumbnail_image AS image,
+		products.price AS price,
+		sub.totalPurchased AS sales
+	FROM (
 		SELECT product_id, SUM(quantity) AS totalPurchased 
 			FROM order_product
 			GROUP BY product_id) AS sub
-	INNER JOIN products p ON sub.product_id = p.id
-	INNER JOIN categories c ON p.category_id = c.id
-	`
-
-	const secondQuery = 
-	`
-	ORDER BY sub.totalPurchased DESC
-	LIMIT 10;
+	INNER JOIN products ON sub.product_id = products.id
 	`
 
 	const productData = await appDataSource.query(
-		firstQuery + condition + secondQuery, variable
+		rawQuery + joinClause + orderClause + whereClause + pageClause
 	);
 
 	return productData;
@@ -91,7 +77,6 @@ async function getBestSellingProducts(categoryId) {
 
 
 module.exports = {
-    getAllProducts,
     getProductsByCategory,
     getProductsById,
 		searchProducts,

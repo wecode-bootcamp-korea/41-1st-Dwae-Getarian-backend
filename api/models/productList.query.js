@@ -2,7 +2,8 @@ const SORT_MAPPER = Object.freeze({
 	new: `created_at DESC `,
 	old: `created_at ASC `,
 	price_high: `price DESC `,
-	price_low: `price ASC `
+	price_low: `price ASC `,
+	best: `sub.totalPurchased DESC `
 });
 
 const LIMIT_MAPPER = Object.freeze({
@@ -10,14 +11,10 @@ const LIMIT_MAPPER = Object.freeze({
 	list_8: `LIMIT 8`
 });
 
-const CATEGORY_MAPPER = Object.freeze({
-	category: (categoryId) => { return `categories.id = ${categoryId}` }
-})
-
 class QueryBuilder {
 	constructor(queryParams) {
 		this.sortBy = queryParams.sortBy || `price_high`;
-		this.categoryId = queryParams.categoryId || ``;
+		this.categoryId = queryParams.categoryId || undefined;
 		this.page = queryParams.page || `list_10`;
 	}
 
@@ -35,12 +32,13 @@ class QueryBuilder {
 	createWhereClause() {
 		if (Array.isArray(this.categoryId)) {
 			const whereClause = this.categoryId.map((option) => {
-				return CATEGORY_MAPPER["category"](option);
+				return `categories.id = ${option}`;
 			});
 
 			return `WHERE ${whereClause.join(` AND `)}`;
 		}
-		else return "";
+		else if (this.categoryId) return `WHERE categories.id = ${this.categoryId}`;
+		else return `WHERE TRUE`;
 	}
 
 	createLimitClause() {

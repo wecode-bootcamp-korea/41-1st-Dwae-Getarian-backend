@@ -2,8 +2,6 @@ const { appDataSource } = require("../database/database");
 const { queryBuilder }  = require("./product.query");
 const QueryBuilder = require("./productList.query");
 
-
-
 async function getProductsById(productId) {
 	try {
 		return await appDataSource.query(`
@@ -18,7 +16,7 @@ async function getProductsById(productId) {
 async function getProducts(queryParams) {
 
 	const queryBuilder = new QueryBuilder(queryParams);
-	const extraQuery = queryBuilder.buildQuery();
+	const extraSql = queryBuilder.buildQuery();
 
 	return await appDataSource.query(`
 	SELECT 
@@ -29,7 +27,7 @@ async function getProducts(queryParams) {
 	FROM products 
 	INNER JOIN categories 
 		ON products.category_id = categories.id 
-	${extraQuery}
+	${extraSql}
 	`);
 }
 
@@ -50,27 +48,23 @@ async function searchProducts(keyWord) {
 
 async function getBestSellingProducts(queryParams) {
 
-	const { joinClause, orderClause, whereClause, pageClause } = await queryBuilder(queryParams);
+	const queryBuilder = new QueryBuilder(queryParams);
+	const extraSql = await queryBuilder.buildQuery();
 
-	const rawQuery =
+	return await appDataSource.query(`
+		SELECT 
+			products.name AS name,
+			products.thumbnail_image AS image,
+			products.price AS price,
+			sub.totalPurchased AS sales
+		FROM (
+			SELECT product_id, SUM(quantity) AS totalPurchased 
+				FROM order_product
+				GROUP BY product_id) AS sub
+		INNER JOIN products ON sub.product_id = products.id
+		${extraSql}
 	`
-	SELECT 
-		products.name AS name,
-		products.thumbnail_image AS image,
-		products.price AS price,
-		sub.totalPurchased AS sales
-	FROM (
-		SELECT product_id, SUM(quantity) AS totalPurchased 
-			FROM order_product
-			GROUP BY product_id) AS sub
-	INNER JOIN products ON sub.product_id = products.id
-	`
-
-	const productData = await appDataSource.query(
-		rawQuery + joinClause + orderClause + whereClause + pageClause
 	);
-
-	return productData;
 }
 
 

@@ -1,7 +1,7 @@
 function checkSpecial(str) {
-	const special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+	const specialPattern = /[`~!@#$%^&*|\\\'\";:\/?]/;
 
-	if(special_pattern.test(str) == true) {
+	if(specialPattern.test(str) == true) {
 		return true;
 	} else {
 		return false;
@@ -10,4 +10,4 @@ function checkSpecial(str) {
 
 module.exports = {
 	checkSpecial
-}
+} 

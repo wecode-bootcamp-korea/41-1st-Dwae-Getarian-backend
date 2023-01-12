@@ -37,7 +37,7 @@ async function getCartItem(userId) {
 		INNER JOIN products p ON p.id = c.product_id
 		WHERE u.id = ${userId}
 		GROUP BY u.id;
-		`);
+	`);
 }
 
 async function checkCartItems(userId, productId) {

@@ -13,9 +13,8 @@ async function getCartItem(userId) {
 }
 
 async function deleteCartItems(userId, cartItems) {
-	const deleteRequest = await cartModel.deleteCartItems(userId, cartItems);
+	return await cartModel.deleteCartItems(userId, cartItems);
 
-	return deleteRequest;
 }
 
 module.exports = {

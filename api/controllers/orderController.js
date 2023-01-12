@@ -12,6 +12,12 @@ async function createOrder(req, res) {
 	return res.status(200).json({ message: "ORDER SUCCESSFULLY HANDLED" });
 };
 
+async function getOrderList(req,res) {
+	const userId = req.userId;
+	const userProductData = await orderService.getOrderList(userId);
+	
+	return res.status(200).json(userProductData);
+}
 
 async function deleteOrder(req, res) {
 	const userId = req.userId;
@@ -28,5 +34,6 @@ async function deleteOrder(req, res) {
 
 module.exports = {
 	createOrder,
-  deleteOrder
+  deleteOrder,
+	getOrderList
 }

@@ -28,6 +28,10 @@ async function createOrder(userId, orderData) {
 	);
 }
 
+async function getOrderList(userId) {
+	return orderModel.getOrderList(userId);
+}
+
 async function deleteOrder(userId, orderId, totalCost, totalCo2) {
 	const [ userData ] = await userModel.getUserData(userId);
 
@@ -41,6 +45,7 @@ async function deleteOrder(userId, orderId, totalCost, totalCo2) {
 
 
 module.exports = {
-    createOrder,
-    deleteOrder
+  createOrder,
+  deleteOrder,
+	getOrderList
 }

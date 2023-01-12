@@ -38,7 +38,7 @@ async function processOrder(userId, totalCost, products) {
 			(orders_id, address, phone_number)
 		VALUES (${orderId}, ${address}, ${phoneNumber})
 	`);
-
+		await queryRunner.commitTransaction();
 	} catch(err) {
 		await queryRunner.rollbackTransaction();
 		throw err;
@@ -48,6 +48,24 @@ async function processOrder(userId, totalCost, products) {
 
 }
 
+async function getOrderList(userId) {
+	return await appDataSource.query(`
+		SELECT u.name AS user,
+			JSON_OBJECT(
+				"payment_type", "voucher", 
+				"user_credit", u.point)         AS payment,
+			JSON_ARRAYAGG(JSON_OBJECT(
+				"id", p.id, 
+				"name", p.name, 
+				"price", p.price,
+				"quantity", c.quantity))        AS products
+		FROM cart c
+		INNER JOIN products p ON p.id = c.product_id
+		INNER JOIN users u ON u.id = c.user_id
+		WHERE u.id = ${userId}
+		GROUP BY u.id
+	`);
+}
 
 async function processDeleteOrder(totalPoint, totalCo2, userId, orderId) {
 	const queryRunner = appDataSource.createQueryRunner();
@@ -76,6 +94,7 @@ async function processDeleteOrder(totalPoint, totalCo2, userId, orderId) {
 
 module.exports = {
 	processOrder,
-	processDeleteOrder
+	processDeleteOrder,
+	getOrderList
 }
 

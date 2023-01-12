@@ -30,7 +30,7 @@ async function createOrder(userId, orderData) {
     await paymentModel.updatePayment(orderId, payment);
 
     const orderRequestData = await orderModel.createOrder(orderId, products);
-    
+
     return orderRequestData;
 }
 
@@ -42,7 +42,7 @@ async function deleteOrder(userId, orderId, refundData) {
 	const updatedCo2 = userCurrentCo2 + refundData["total_co2"];
 
 	const customerRefund = await userModel.updateUserData(updatedPoint, updatedCo2, userId);
-	
+
   const requestResult = await orderModel.deleteOrder(userId, orderId);
 
   return requestResult;

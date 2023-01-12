@@ -36,7 +36,7 @@ async function userSignUpProcess(user, hashedPassword) {
 			user.postcode, 
 			user["phone_number"], 
 		]);
-
+		await queryRunner.commitTransaction();
 	} catch(err) {
 		await queryRunner.rollbackTransaction();
 		throw err;
@@ -46,31 +46,26 @@ async function userSignUpProcess(user, hashedPassword) {
 }
 
 async function logIn(userEmail) {
-  return await appDataSource.query(
-    `
+  return await appDataSource.query(`
     SELECT * FROM users
     WHERE email = ?;
-    `, [userEmail]);
+  `, [userEmail]);
 }
 
 async function getUserData(userId) {
-    const userData = await appDataSource.query(
-    `
+    const userData = await appDataSource.query(`
     SELECT * from users
-    WHERE id = ?;
-    `, [ userId ]);
-
-    return userData;
+    WHERE id = ${userId};
+  `);
 }
 
 async function updateUserData(userPoint, totalCo2, userId) {
-    await appDataSource.query(
-    `
+  await appDataSource.query(`
     UPDATE users
-        SET point = ?
-				SET co2 = ?
-    WHERE id = ?;
-    `, [ userPoint, totalCo2, userId ]);
+      SET point = ${userPoint}
+			SET co2 = ${totalCo2}
+    WHERE id = ${userId};
+  `);
 }
 
 

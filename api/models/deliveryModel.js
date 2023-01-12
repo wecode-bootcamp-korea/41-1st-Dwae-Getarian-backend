@@ -8,7 +8,7 @@ async function updateDelivery(ordersId, deliveryData) {
 			VALUES
 				(?, ?, ?)
 		`, [ ordersId, deliveryData["address"], deliveryData["phone_number"] ]);
-		
+
 	return delivery; 
 }
 

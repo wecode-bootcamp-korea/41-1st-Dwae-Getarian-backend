@@ -23,7 +23,7 @@ async function getCartItems(req, res) {
 	if (!cartItems.length) {
 		return res.status(404).json({ message: "NO FOLLOWING PRODUCTS TRY PUTTTING SOME ITEMS!!!" });
 	}
-	
+
 	const products = cartItems[0].products;
 
 	return res.status(200).json(products);

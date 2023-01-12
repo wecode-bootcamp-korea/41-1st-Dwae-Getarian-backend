@@ -11,7 +11,7 @@ async function insertCartItem(userId, product) {
 				VALUES 
 					(?, ?, ?)
 			`, [ userId, product["product_id"], product.quantity ]);
-	
+
 			return requestCartData;
 	} else {
 		const requestCartData = await appDataSource.query(
@@ -20,7 +20,7 @@ async function insertCartItem(userId, product) {
 					SET quantity = ?
 				WHERE id = ?;
 			`, [ product.quantity + checkResult.quantity, checkResult.id ]);
-	
+
 			return requestCartData;
 	}
 }
@@ -42,7 +42,7 @@ async function getCartItems(userId) {
 		WHERE u.id = ?
 		GROUP BY u.id;
 		`, [ userId ]);
-	
+
 	return cartData;
 }
 

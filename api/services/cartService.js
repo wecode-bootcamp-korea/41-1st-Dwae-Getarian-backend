@@ -8,7 +8,7 @@ async function insertCartItem(userId, product) {
 
 async function getCartItem(userId) {
 	const cartItems = await cartModel.getCartItems(userId);
-	
+
 	return cartItems;
 }
 
@@ -20,7 +20,7 @@ async function deleteCartItems(userId, cartItems) {
 	for (let i = 0; i < cartItems.length; i++) {
 		values.push(cartItems[i].id)
 	}
-	
+
 	const deleteRequest = await cartModel.deleteCartItems(rawQuery, condition, values);
 
 	return deleteRequest;

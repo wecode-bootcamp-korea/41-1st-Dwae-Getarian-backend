@@ -3,14 +3,14 @@ const orderService = require("../services/orderService");
 async function createOrder(req, res) {
 	const userId = req.id; 
 	const orderData = req.body;
-	
+
 	if (!orderData  || !userId) {
 		const err = new Error("KEY ERROR");
 		err.status = 401;
 
 		throw err;
 	}
-	
+
 	const orderRequest = await orderService.createOrder(userId, orderData);
 
 	if (!orderRequest) {

@@ -48,7 +48,7 @@ class QueryBuilder {
 	}
 
 	mealFilterBuilder(booleanId) {
-		return `isMealkit = ${booleanId}`;
+		return `is_mealkit = ${booleanId}`;
 	}
 
 	buildQuery() {
@@ -61,3 +61,5 @@ class QueryBuilder {
 }
 
 module.exports = QueryBuilder;
+
+

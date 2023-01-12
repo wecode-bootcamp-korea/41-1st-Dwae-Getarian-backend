@@ -14,32 +14,20 @@ async function getProductsById(productId) {
 
 async function getProducts(queryParams) {
 	try {
-		const queryBuilder = new QueryBuilder(queryParams.categoryId, 1, 2, 3);
-
+		const { categoryId, sortBy, limit, offset, isMealkit } = queryParams
+		const queryBuilder = new QueryBuilder(categoryId, sortBy, limit, offset, isMealkit);
 		const sql = queryBuilder.buildQuery();		
-		
-		// console.log(`
-		// SELECT 
-		// 	products.id 								AS id, 
-		// 	products.name 							AS name, 
-		// 	products.thumbnail_image 		AS image, 
-		// 	products.price 							AS price
-		// FROM products 
-		// INNER JOIN categories 
-		// 	ON products.category_id = categories.id 
-		// ${whereClause}
-		// `);
 
 		return await appDataSource.query(`
 		SELECT 
 			products.id 								AS id, 
 			products.name 							AS name, 
-			products.thumbnail_image 		AS image, 
+			products.thumbnail_image 		AS thumbnail_image, 
 			products.price 							AS price
 		FROM products 
 		INNER JOIN categories 
 			ON products.category_id = categories.id 
-		${whereClause}
+		${sql}
 		`);
 	} catch(err) {
 		throw err;
@@ -62,7 +50,7 @@ async function searchProducts(keyWord) {
 async function getBestSellingProducts(queryParams) {
 	try {
 		const queryBuilder = new QueryBuilder(queryParams);
-		const extraSql = await queryBuilder.buildQuery();
+		const sql = await queryBuilder.buildQuery();
 	
 		return await appDataSource.query(`
 			SELECT 
@@ -77,7 +65,7 @@ async function getBestSellingProducts(queryParams) {
 					GROUP BY product_id) AS sub
 			INNER JOIN products ON sub.product_id = products.id
 			INNER JOIN categories ON categories.id = products.category_id
-			${extraSql}
+			${sql}
 		`
 		);
 	} catch(err) {

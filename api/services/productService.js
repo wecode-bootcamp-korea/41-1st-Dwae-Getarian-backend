@@ -14,7 +14,7 @@ async function getProducts(queryParams) {
   return categorisedProducts;
 }
 
-async function searchedProducts(keyWord) {
+async function searchProducts(keyWord) {
 	if(checkSpecial(keyWord)) detectError("NOT VALID INPUT", 401);
 
   const searchedProducts = await productModel.searchProducts(keyWord);
@@ -31,6 +31,6 @@ async function getBestSellingProducts(queryParams) {
 module.exports = {
 	getProductsById,
   getProducts,
-  searchedProducts,
+  searchProducts,
 	getBestSellingProducts
 }

@@ -23,10 +23,10 @@ async function getProducts(req, res, next) {
 	return res.status(200).json(categorisedProducts);
 }
 
-async function searchedProducts(req, res) {
-	const { keyWord } = req.body
+async function searchProducts(req, res) {
+	const { keyWord } = req.query
 
-	const searchedProducts = await productService.searchedProducts(keyWord);
+	const searchedProducts = await productService.searchProducts(keyWord);
 
 	return res.status(201).json(searchedProducts);
 }
@@ -42,6 +42,6 @@ async function getBestSellingProducts(req, res) {
 module.exports = {
     getProductsById,
     getProducts,
-    searchedProducts,
+    searchProducts,
 		getBestSellingProducts
 } 

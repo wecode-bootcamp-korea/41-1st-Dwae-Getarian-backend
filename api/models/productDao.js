@@ -14,9 +14,22 @@ async function getProductsById(productId) {
 
 async function getProducts(queryParams) {
 	try {
-		const queryBuilder = new QueryBuilder(queryParams);
-		const extraSql = queryBuilder.buildQuery();
-	
+		const queryBuilder = new QueryBuilder(queryParams.categoryId, 1, 2, 3);
+
+		const sql = queryBuilder.buildQuery();		
+		
+		// console.log(`
+		// SELECT 
+		// 	products.id 								AS id, 
+		// 	products.name 							AS name, 
+		// 	products.thumbnail_image 		AS image, 
+		// 	products.price 							AS price
+		// FROM products 
+		// INNER JOIN categories 
+		// 	ON products.category_id = categories.id 
+		// ${whereClause}
+		// `);
+
 		return await appDataSource.query(`
 		SELECT 
 			products.id 								AS id, 
@@ -26,7 +39,7 @@ async function getProducts(queryParams) {
 		FROM products 
 		INNER JOIN categories 
 			ON products.category_id = categories.id 
-		${extraSql}
+		${whereClause}
 		`);
 	} catch(err) {
 		throw err;

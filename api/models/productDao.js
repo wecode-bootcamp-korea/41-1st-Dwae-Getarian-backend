@@ -14,7 +14,7 @@ async function getProductsById(productId) {
 
 async function getProducts(queryParams) {
 	try {
-		const { categoryId, sortBy, limit, offset, isMealkit } = queryParams
+		const { categoryId, sortBy, limit, offset, isMealkit } = queryParams   
 		const queryBuilder = new QueryBuilder(categoryId, sortBy, limit, offset, isMealkit);
 		const sql = queryBuilder.buildQuery();		
 

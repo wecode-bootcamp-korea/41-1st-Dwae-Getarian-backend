@@ -58,6 +58,7 @@ async function getOrderList(userId) {
 				"id", p.id, 
 				"name", p.name, 
 				"price", p.price,
+				"image", p.thumbnail_image,
 				"quantity", c.quantity))        AS products
 		FROM cart c
 		INNER JOIN products p ON p.id = c.product_id

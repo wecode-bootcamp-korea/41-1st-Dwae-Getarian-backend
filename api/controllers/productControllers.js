@@ -20,26 +20,21 @@ async function getProductsById(req, res, next) {
 
 
 async function getProductsByCategory(req, res, next) {
-    try {
-        let displayOption = "";
-        let displayColumn = "";
+	try {
+		const queryParams = req.query || "";
+		const categorisedProducts = await productService.getProductsByCategory(queryParams);
 
-        displayColumn = req.query.sortBy;
-        displayOption = req.query.option;
+		if (!categorisedProducts.length) {
+				const err = new Error ("No follwing products");
+				err.statusCode = 404;
+				throw err;
+		}
 
-        const categorisedProducts = await productService.getProductsByCategory(categoryId, displayColumn, displayOption);
-    
-        if (!categorisedProducts.length) {
-            const err = new Error ("No follwing products");
-            err.statusCode = 404;
-            throw err;
-        }
-    
-        return res.status(200).json(categorisedProducts);
+		return res.status(200).json(categorisedProducts);
 
-    } catch(err) {
-        next(err);
-    }
+} catch(err) {
+		next(err);
+}
 }
 
 async function searchedProducts(req, res) {
@@ -51,13 +46,9 @@ async function searchedProducts(req, res) {
 }
 
 async function getBestSellingProducts(req, res) {
-	let categoryId = "";
+	const queryParams = req.query;
 
-	if (req.query.categoryId) {
-		categoryId = req.query.categoryId;
-	}
-
-	const bestProductsList = await productService.getBestSellingProducts(categoryId);
+	const bestProductsList = await productService.getBestSellingProducts(queryParams);
 
 	return res.status(200).json(bestProductsList);
 }

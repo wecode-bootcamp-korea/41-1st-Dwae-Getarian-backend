@@ -6,7 +6,6 @@ const { detectError } = require("../util/detectError");
 const passwordHandler = require("../util/bcrypt");
 const userDatabase = require("../models/userDao");
 
-
 async function userSignUp(user) {
   // eg test@email.com
   const emailValidation = new RegExp(
@@ -33,7 +32,6 @@ async function userSignUp(user) {
 
 async function userLogIn(email, password) {
 	const [ userData ] = await userDatabase.logIn(email);
-
 	const passwordsAreEqual = await passwordHandler.decode(password, userData.password);
 
 	if (!passwordsAreEqual) {

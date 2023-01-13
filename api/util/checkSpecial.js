@@ -10,4 +10,4 @@ function checkSpecial(str) {
 
 module.exports = {
 	checkSpecial
-}
+} 

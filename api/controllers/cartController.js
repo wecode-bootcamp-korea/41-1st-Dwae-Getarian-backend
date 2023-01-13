@@ -1,43 +1,33 @@
 const cartService = require("../services/cartService");
+const { detectError } = require("../util/detectError");
 
 async function insertCartItem(req, res) {
-	const userId = req.params.id;
-	const product = req.body;
+	const userId = req.userId;
+	const { productId, quantity } = req.body;
 
-	const requestResult = await cartService.insertCartItems(userId, product);
+	if (!productId || !quantity) detectError("NO INPUT DATA", 401);
 
-	if (!requestResult) {
-			const err = new Error("Not Upated Successfully!!! (CART CONTROLLER)");
-			err.statusCode = 401;
-			throw err;
-	}
+	await cartService.insertCartItem(userId, productId, quantity);
 
 	return res.status(201).json({ message: "PRODUCT UPDATED SUCCESSFULLY!!! (cartController)"});
 }
 
 async function getCartItems(req, res) {
-	const userId = req.params.id;
+	const userId = req.userId;
+	const cartItems = await cartService.getCartItem(userId);
 
-	const cartItems = await cartService.getCartItems(userId);
-
-	if (!cartItems.length) {
-		return res.status(404).json({ message: "NO FOLLOWING PRODUCTS TRY PUTTTING SOME ITEMS!!!" });
-	}
-
-	const products = cartItems[0].products;
-
-	return res.status(200).json(products);
+	if (!cartItems.length) detectError("NO FOLLOWING PRODUCTS TRY PUTTTING SOME ITEMS!!!", 401);
+	
+	return res.status(200).json(cartItems);
 }
 
 async function deleteCartItems(req, res) {
-	const userId = req.id;
+	const userId = req.userId;
 	const cartItems = req.body["cart_items"];
 
-	const requestResult = await cartService.deleteCartItems(userId, cartItems);
+	if (!cartItems) detectError("NO INPUT", 401);
 
-	if (!requestResult) {
-		return res.status(401).json({ message: "delete request failed to handle" })
-	}
+	await cartService.deleteCartItems(userId, cartItems);
 
 	return res.status(200).json({ message: "delete request handled successfully" })
 } 

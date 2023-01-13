@@ -1,29 +1,20 @@
 const cartModel = require("../models/cartDao");
 
-async function insertCartItem(userId, product) {
-    const result = await cartModel.insertCartItems(userId, product);
+async function insertCartItem(userId, productId, quantity) {
+  const result = await cartModel.insertCartItem(userId, productId, quantity);
 
-    return result;
+  return result;
 }
 
 async function getCartItem(userId) {
-	const cartItems = await cartModel.getCartItems(userId);
-
+	const cartItems = await cartModel.getCartItem(userId);
+	
 	return cartItems;
 }
 
 async function deleteCartItems(userId, cartItems) {
-	const values = [];
-	const rawQuery = `DELETE FROM cart `
-	const condition = `WHERE cart.user_id = ${userId} AND cart.id IN (?)`
+	return await cartModel.deleteCartItems(userId, cartItems);
 
-	for (let i = 0; i < cartItems.length; i++) {
-		values.push(cartItems[i].id)
-	}
-
-	const deleteRequest = await cartModel.deleteCartItems(rawQuery, condition, values);
-
-	return deleteRequest;
 }
 
 module.exports = {

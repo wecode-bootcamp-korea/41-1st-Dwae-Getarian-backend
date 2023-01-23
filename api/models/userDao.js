@@ -36,7 +36,7 @@ async function userSignUpProcess(user, hashedPassword) {
 			user.postcode, 
 			user["phone_number"], 
 		]);
-
+		await queryRunner.commitTransaction();
 	} catch(err) {
 		await queryRunner.rollbackTransaction();
 		throw err;
@@ -46,26 +46,47 @@ async function userSignUpProcess(user, hashedPassword) {
 }
 
 async function logIn(userEmail) {
-  return await appDataSource.query(`
+	try {
+		return await appDataSource.query(`
     SELECT * FROM users
     WHERE email = ?;
   `, [userEmail]);
+	} catch(err) {
+		throw err;
+	}
 }
 
 async function getUserData(userId) {
-  return await appDataSource.query(`
-    SELECT * from users
-    WHERE id = ${userId};
+	try {
+		return await appDataSource.query(`
+  	SELECT * from users
+  	WHERE id = ${userId};
   `);
+	} catch(err) {
+		throw err;
+	}
+}
+
+async function updateUserDataQuery(userId, userPoint, totalCo2) {
+	return`
+	UPDATE users
+		SET point = ${userPoint},
+		co2 = ${totalCo2}
+	WHERE id = ${userId}
+	`;
 }
 
 async function updateUserData(userPoint, totalCo2, userId) {
-  await appDataSource.query(`
-    UPDATE users
-      SET point = ${userPoint}
-			SET co2 = ${totalCo2}
-    WHERE id = ${userId};
-  `);
+	try {
+		return await appDataSource.query(`
+		UPDATE users
+			SET point = ${userPoint},
+			co2 = ${totalCo2}
+		WHERE id = ${userId}
+		`)
+	} catch(err) {
+		throw err;
+	}
 }
 
 
@@ -73,5 +94,6 @@ module.exports = {
 	userSignUpProcess,
   logIn,
   updateUserData,
-	getUserData
+	updateUserDataQuery,
+	getUserData,
 }

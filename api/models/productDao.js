@@ -1,84 +1,84 @@
 const { appDataSource } = require("../database/database");
-const { queryBuilder }  = require("./product.query");
+const QueryBuilder = require("./productList.query");
 
 async function getProductsById(productId) {
 	try {
-		const product = await appDataSource.query(
-			`
-				SELECT * FROM products p 
-				WHERE p.id = ? 
-			`, [ productId ]);
-		
-				return product;
-				
-} catch(err) {
+		return await appDataSource.query(`
+			SELECT * FROM products p 
+			WHERE p.id = ? 
+		`, [ productId ]);					
+	} catch(err) {
 		throw err;
+	}
 }
-}
 
-async function getProductsByCategory(queryParams) {
-	const { joinClause, orderClause, whereClause, pageClause } = await queryBuilder(queryParams);
+async function getProducts(queryParams) {
+	try {
+		const { categoryId, sortBy, limit, offset, isMealkit } = queryParams   
+		const queryBuilder = new QueryBuilder(categoryId, sortBy, limit, offset, isMealkit);
+		const sql = queryBuilder.buildQuery();		
 
-	const rawQuery = `
-	SELECT 
-		products.id AS id, 
-		products.name AS name, 
-		products.thumbnail_image AS image, 
-		products.price AS price
-	FROM products `;
-	
-	const categorisedProducts = await appDataSource.query(
-		rawQuery + joinClause + whereClause + orderClause + pageClause
-	);
-
-
-  return categorisedProducts;
+		return await appDataSource.query(`
+		SELECT 
+			products.id 								AS id, 
+			products.name 							AS name, 
+			products.thumbnail_image 		AS thumbnail_image, 
+			products.price 							AS price,
+			categories.name             AS category
+		FROM products 
+		INNER JOIN categories 
+			ON products.category_id = categories.id 
+		${sql}
+		`);
+	} catch(err) {
+		throw err;
+	}
 }
 
 async function searchProducts(keyWord) {
-	const { searchClause } = await queryBuilder(keyWord);
-
-	const rawQuery = 
-	`
-	SELECT name, thumbnail_image FROM products
-	`
-
-	const searchedProducts = await appDataSource.query(
-		rawQuery + searchClause
-);
-
-	return searchedProducts;
+	try {
+		return await appDataSource.query(`
+		SELECT id, name, thumbnail_image FROM products
+			WHERE name LIKE '${keyWord}%' 
+ 			OR name LIKE '%${keyWord}%'
+ 			OR name LIKE '%${keyWord}'
+	`);
+	} catch(err) {
+		throw err;
+	}
 }
 
 async function getBestSellingProducts(queryParams) {
+	try {
+		const { categoryId, sortBy, limit, offset, isMealkit } = queryParams  
+		const queryBuilder = new QueryBuilder(categoryId, sortBy, limit, offset, isMealkit);
+		const sql = await queryBuilder.buildQuery();
 
-	const { joinClause, orderClause, whereClause, pageClause } = await queryBuilder(queryParams);
-
-	const rawQuery =
-	`
-	SELECT 
-		products.name AS name,
-		products.thumbnail_image AS image,
-		products.price AS price,
-		sub.totalPurchased AS sales
-	FROM (
-		SELECT product_id, SUM(quantity) AS totalPurchased 
-			FROM order_product
-			GROUP BY product_id) AS sub
-	INNER JOIN products ON sub.product_id = products.id
-	`
-
-	const productData = await appDataSource.query(
-		rawQuery + joinClause + orderClause + whereClause + pageClause
-	);
-
-	return productData;
+		return await appDataSource.query(`
+			SELECT 
+				products.id 											AS id,
+				products.name 										AS name,
+				products.thumbnail_image 					AS image,
+				products.price 										AS price,
+				sub.totalPurchased 								AS sales
+			FROM (
+				SELECT product_id, SUM(quantity) 	AS totalPurchased 
+					FROM order_product
+					GROUP BY product_id) AS sub
+			INNER JOIN products ON sub.product_id = products.id
+			INNER JOIN categories ON categories.id = products.category_id
+			${sql}
+		`
+		);
+	} catch(err) {
+		throw err;
+	}
 }
 
 
 module.exports = {
-    getProductsByCategory,
-    getProductsById,
-		searchProducts,
-		getBestSellingProducts
+  getProducts,
+  getProductsById,
+	searchProducts,
+	getBestSellingProducts
 }

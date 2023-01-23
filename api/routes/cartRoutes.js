@@ -1,8 +1,8 @@
 const express = require("express");
 
 const { asyncErrorHandler } = require("../middlewares/errorHandler");
-const cartController = require("../controllers/cartController");
 const { jwtVerify } = require("../middlewares/auth");
+const cartController = require("../controllers/cartController");
 
 const routes = express.Router();
 

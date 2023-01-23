@@ -8,6 +8,10 @@ async function getCartItem(userId) {
 	return await cartModel.getCartItem(userId);
 }
 
+async function updateCartItems(userId, productId, quantity) {
+	await cartModel.updateCartItems(userId, productId, quantity);
+}
+
 async function deleteCartItems(userId, cartItems) {
 	return await cartModel.deleteCartItems(userId, cartItems);
 }
@@ -15,5 +19,6 @@ async function deleteCartItems(userId, cartItems) {
 module.exports = {
 	insertCartItem,
 	getCartItem,
-	deleteCartItems
+	deleteCartItems,
+	updateCartItems
 }

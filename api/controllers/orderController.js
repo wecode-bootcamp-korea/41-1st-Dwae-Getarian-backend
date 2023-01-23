@@ -4,7 +4,7 @@ const { detectError } = require("../util/detectError");
 async function createOrder(req, res) {
 	const userId = req.userId; 
 	const orderData = req.body;
-	
+
 	if (!orderData || !userId) detectError("NO INPUT DATA", 401);
 	
 	await orderService.createOrder(userId, orderData);
@@ -14,8 +14,8 @@ async function createOrder(req, res) {
 
 async function getOrderList(req,res) {
 	const userId = req.userId;
-	const userProductData = await orderService.getOrderList(userId);
-	
+	const [ userProductData ] = await orderService.getOrderList(userId);
+
 	return res.status(200).json(userProductData);
 }
 

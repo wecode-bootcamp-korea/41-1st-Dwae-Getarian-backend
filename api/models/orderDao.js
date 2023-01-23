@@ -1,22 +1,24 @@
 const { appDataSource } = require("../database/database");
+const { updateUserDataQuery } = require("./userDao");
 
-
-async function processOrder(userId, totalCost, products) {
+async function processOrder(userId, updatedUserPoint, updatedUserCo2, totalCost, products, paymentType, address, phoneNumber) {
 	const queryRunner = appDataSource.createQueryRunner();
 	await queryRunner.connect();
 	await queryRunner.startTransaction();
 
 	try {
+		const userQuery = await updateUserDataQuery(userId, updatedUserPoint, updatedUserCo2);
+	 	await queryRunner.query(userQuery);
+
 		const result = await queryRunner.query(`
 			INSERT INTO orders 
 				(user_id, total_cost) 
 			VALUES (${userId}, ${totalCost})
 		`);
 	
-	const orderId = result.insertId;
-	
-	const values = products.map((product) => {
-		return [ orderId, product.id, product.quantity ];
+		const orderId = result.insertId;
+		const values = products.map((product) => {
+			return [ orderId, product.id, product.quantity ]
 	});
 
 	await queryRunner.query(`
@@ -24,20 +26,21 @@ async function processOrder(userId, totalCost, products) {
 			orders_id, 
 			product_id, 
 			quantity
-		) VALUES ?
+		) VALUES ?;
 	`, [values]);
-	
+
 	await queryRunner.query(`
 		INSERT INTO payment
 			(orders_id, payment_type, total_cost)
-		VALUES (${orderId}, ${paymentType}, ${totalCost}) 
+		VALUES (${orderId}, "${paymentType}", ${totalCost});
 	`);
 
 	await queryRunner.query(`
 		INSERT INTO delivery_address
 			(orders_id, address, phone_number)
-		VALUES (${orderId}, ${address}, ${phoneNumber})
+		VALUES (${orderId}, "${address}", ${phoneNumber});
 	`);
+
 		await queryRunner.commitTransaction();
 	} catch(err) {
 		await queryRunner.rollbackTransaction();
@@ -45,14 +48,14 @@ async function processOrder(userId, totalCost, products) {
 	} finally {
 		await queryRunner.release();
 	}
-
 }
 
 async function getOrderList(userId) {
-	return await appDataSource.query(`
+	try {
+		return await appDataSource.query(`
 		SELECT u.name AS user,
 			JSON_OBJECT(
-				"payment_type", "voucher", 
+				"payment_type", "credit", 
 				"user_credit", u.point)         AS payment,
 			JSON_ARRAYAGG(JSON_OBJECT(
 				"id", p.id, 
@@ -66,30 +69,31 @@ async function getOrderList(userId) {
 		WHERE u.id = ${userId}
 		GROUP BY u.id
 	`);
+	} catch(err) {
+		throw err;
+	}
+
 }
 
-async function processDeleteOrder(totalPoint, totalCo2, userId, orderId) {
+async function processDeleteOrder(updatedUserPoint, updatedUserCo2, userId, orderId) {
 	const queryRunner = appDataSource.createQueryRunner();
 	await queryRunner.connect();
 	await queryRunner.startTransaction();
 
   try {
-		await queryRunner.query(`
-			UPDATE users
-    		SET point = ${totalPoint},
-				co2 = ${totalCo2}
-  		WHERE id = ${userId}
-		`) 
+		const userQuery = await updateUserDataQuery(userId, updatedUserPoint, updatedUserCo2);
+	 	await queryRunner.query(userQuery);
 
 		await queryRunner.query(`
 			DELETE FROM orders
 			WHERE user_id = ${userId} AND order_id = ${Number(orderId)}
 		`);
+		await queryRunner.commitTransaction();
 	} catch (err) {
 		await queryRunner.rollbackTransaction();
 		throw err;
 	} finally {
-		await queryRunner.release;
+		await queryRunner.release();
 	}
 }
 

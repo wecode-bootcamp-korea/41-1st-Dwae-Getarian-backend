@@ -23,7 +23,8 @@ async function getProducts(queryParams) {
 			products.id 								AS id, 
 			products.name 							AS name, 
 			products.thumbnail_image 		AS thumbnail_image, 
-			products.price 							AS price
+			products.price 							AS price,
+			categories.name             AS category
 		FROM products 
 		INNER JOIN categories 
 			ON products.category_id = categories.id 
@@ -37,7 +38,7 @@ async function getProducts(queryParams) {
 async function searchProducts(keyWord) {
 	try {
 		return await appDataSource.query(`
-		SELECT name, thumbnail_image FROM products
+		SELECT id, name, thumbnail_image FROM products
 			WHERE name LIKE '${keyWord}%' 
  			OR name LIKE '%${keyWord}%'
  			OR name LIKE '%${keyWord}'
@@ -49,9 +50,10 @@ async function searchProducts(keyWord) {
 
 async function getBestSellingProducts(queryParams) {
 	try {
-		const queryBuilder = new QueryBuilder(queryParams);
+		const { categoryId, sortBy, limit, offset, isMealkit } = queryParams  
+		const queryBuilder = new QueryBuilder(categoryId, sortBy, limit, offset, isMealkit);
 		const sql = await queryBuilder.buildQuery();
-	
+
 		return await appDataSource.query(`
 			SELECT 
 				products.id 											AS id,
